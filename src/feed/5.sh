@@ -1,8 +1,6 @@
 #!/bin/bash
-echo -e "[$0]"
-
+# Test script that finishes incorrectly ... 
 ls -larth file_not_found || {
-#ls -larth || {
 	exit $?
 }
 

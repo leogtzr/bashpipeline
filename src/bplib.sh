@@ -26,17 +26,21 @@ build_bp_error_file() {
 	cat <<-BP_ERROR_CONTENT > bp.error
 	FAILED_SCRIPT=$1
 	EXIT_CODE=$2
+	ERROR_MSG="$3"
 	BP_ERROR_CONTENT
 }
 
 dump_error_info() {
 	(
 		. bp.error
-		echo -e "\nFAILED_SCRIPT - ${FAILED_SCRIPT}"
-		echo -e "EXIT_CODE - ${EXIT_CODE}"
-		echo -e "ERROR_MSG - ${ERROR_MSG}" | tr '@' '\n'
+		echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
+		echo -e "EXIT_CODE =======> ${EXIT_CODE}"
+		echo -e "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
+
+		echo -e "Use bp_continue.sh once the problem has been fixed.\n"
 		rm bp.error
 	)
+	rm bp_error_desc
 }
 
 # Punto inicial del programa ... 

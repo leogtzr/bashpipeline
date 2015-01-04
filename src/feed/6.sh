@@ -1,5 +1,3 @@
 #!/bin/bash
-
-echo -e "[$0]"
-
+# Dummy script to test the lib:
 exit 0
