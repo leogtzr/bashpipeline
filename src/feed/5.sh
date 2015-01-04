@@ -1,5 +1,8 @@
 #!/bin/bash
+echo -e "[$0]"
 
-echo -e "[$0] NAME: $NAME"
+ls -larth file_not_found || {
+	exit $?
+}
 
-exit 3
+exit 0

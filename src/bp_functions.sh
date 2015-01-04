@@ -22,7 +22,6 @@ build_bp_error_file() {
 	cat <<-BP_ERROR_CONTENT > bp.error
 	FAILED_SCRIPT=$1
 	EXIT_CODE=$2
-	ERROR_MSG="${3//\\r\\n/}"
 	BP_ERROR_CONTENT
 }
 
@@ -35,7 +34,7 @@ dump_error_info() {
 	)
 }
 
-main() {
+start_scripts() {
 	
 	log_debug "Beginning ${PROJ_NAME} project"
 
@@ -43,7 +42,11 @@ main() {
 	for script in `seq -f "%g.sh" ${START_POINT} 10`; do
 		if [ -f "${WORKING_DIR}/${script}" ]; then
 			log_debug "Running: $script  SCRIPT"
-			nohup "${WORKING_DIR}/${script}" 2> bp_error_desc
+
+            # Execute sequentials scripts within the WORKING_DIR
+            # and send the output to the "bp_error_desc" file.
+
+			"${WORKING_DIR}/${script}" 2> bp_error_desc
 			EXIT_STATUS=$?
 			log_debug "exit status: ${EXIT_STATUS}"
 
@@ -53,6 +56,7 @@ main() {
 				dump_error_info
 				exit ${EXIT_STATUS}
 			fi
+            
 		fi
 	done
 

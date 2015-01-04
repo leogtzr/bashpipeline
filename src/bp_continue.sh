@@ -23,7 +23,6 @@ else
 		exit 76
 	fi
 
-	# @todo check if the argument matches with the FAILED_SCRIPT
 	SCRIPT_TO_START=$1
 	awk -F '=' '/^FAILED_SCRIPT/ {print $2}' bp.error | grep -Eq "^${SCRIPT_TO_START}$" && {
 		
@@ -34,7 +33,7 @@ else
 			if [ -f "${WORKING_DIR}/${script}" ]; then
 
 				log_debug "Running: $script"
-				nohup "${WORKING_DIR}/${script}" 2> bp_error_desc
+				"${WORKING_DIR}/${script}" 2> bp_error_desc
 				EXIT_STATUS=$?
 				log_debug "status: ${EXIT_STATUS}"
 
@@ -48,8 +47,7 @@ else
 
 		done
 
-		rm -vf "bp.error"
-
+		rm -vf "./bp.error"
 		exit 0
 
 	} || {
