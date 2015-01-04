@@ -1,5 +1,11 @@
 # bash pipeline general functions. 
 
+# Including the necessary script files:
+. bp_flow.env 2> /dev/null || {
+    echo -e "\n[ERROR] bp_flow.env file not found.\n"
+    exit 68
+}
+
 log_debug () {
 	if [ -z "$1" ]; then
 		echo "ERROR, empty argument"
@@ -8,10 +14,8 @@ log_debug () {
 
 	if [ ${DEBUG} -eq 1 ]; then
 		if [ ${INCLUDE_DATE_LOG} -eq 1 ]; then
-			# echo -e "`date '+%F %T'` [DEBUG] $1" >> "${DEBUG_FILE}"
 			echo -e "[`date '+%F %T'`] [DEBUG] $1" | tee -a "${DEBUG_FILE}"
 		else
-			# echo -e "[DEBUG] $1" >> "${DEBUG_FILE}"
 			echo -e "[DEBUG] $1" | tee -a "${DEBUG_FILE}"
 		fi
 	fi
@@ -31,6 +35,7 @@ dump_error_info() {
 		echo -e "\nFAILED_SCRIPT - ${FAILED_SCRIPT}"
 		echo -e "EXIT_CODE - ${EXIT_CODE}"
 		echo -e "ERROR_MSG - ${ERROR_MSG}" | tr '@' '\n'
+		rm bp.error
 	)
 }
 
