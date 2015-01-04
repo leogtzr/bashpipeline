@@ -39,11 +39,19 @@ dump_error_info() {
 	)
 }
 
+# Punto inicial del programa ... 
+# Inicia la ejecución de los scripts dentro del directorio
+# WORKING_DIR.
+
+# Si alguno de los script dentro del directorio WORKING_DIR falla
+# todo el proceso se detiene. 
+# Cuando el error ha sido corregido, se puede utilizar el script
+# bp_continue.sh para continuar la ejecución del proceso:
+# bp_continue.sh 5.sh
 start_scripts() {
 	
 	log_debug "Beginning ${PROJ_NAME} project"
 
-	# for script in "${WORKING_DIR}/"*.sh; do
 	for script in `seq -f "%g.sh" ${START_POINT} 10`; do
 		if [ -f "${WORKING_DIR}/${script}" ]; then
 			log_debug "Running: $script  SCRIPT"
