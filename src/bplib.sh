@@ -56,6 +56,14 @@ start_scripts() {
 	
 	log_debug "Beginning ${PROJ_NAME} project"
 
+	if [ "${FLOW_TYPE}" = "SEQ" ]; then
+		echo -e "Sequential flow"
+	elif [ "${FLOW_TYPE}" = "DOC" ]; then
+		echo -e "Doc flow"
+	else
+		echo -e "Other, error, not supported ... "
+	fi
+
 	for script in `seq -f "%g.sh" ${START_POINT} 10`; do
 		if [ -f "${WORKING_DIR}/${script}" ]; then
 			log_debug "Running: $script  SCRIPT"

@@ -1,0 +1,17 @@
+# syntax:
+#
+# script:description:return value:script[,script]
+# Example:
+# run_feed.sh:feed script for the X project:0:backup
+
+#a:a script:0:b,sd
+#b:backup script:0:
+
+a:a script:0:b
+b:b script:0:c1,c2
+c1:c1 script:0:d0,d1
+c2:c2 script:0:d2
+d0:d0 script:0:
+d1:d1 script:0:e
+d2:d2 script:0:e
+e:e script:0:
