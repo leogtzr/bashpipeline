@@ -1,0 +1,54 @@
+{
+	Script: a
+	Description: a script
+	Expected status: 0
+	Next scripts: b
+}
+{
+	Script: b
+	Description: b script
+	Expected status: 0
+	Next scripts: c1,c2
+}
+{
+	Script: c1
+	Description: c1 script
+	Expected status: 0
+	Next scripts: d0,d1
+}
+{
+	Script: d0
+	Description: d0 script
+	Expected status: 0
+	Next scripts: 
+}
+{
+	Script: d1
+	Description: d1 script
+	Expected status: 0
+	Next scripts: e
+}
+{
+	Script: e
+	Description: e script
+	Expected status: 0
+	Next scripts: 
+}
+{
+	Script: c2
+	Description: c2 script
+	Expected status: 0
+	Next scripts: d2
+}
+{
+	Script: d2
+	Description: d2 script
+	Expected status: 0
+	Next scripts: e
+}
+{
+	Script: e
+	Description: e script
+	Expected status: 0
+	Next scripts: 
+}
