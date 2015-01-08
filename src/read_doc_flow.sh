@@ -12,7 +12,6 @@ dump_processor_info() {
         echo -e "ERROR, argument empty"
         return 1
     fi
-    # a:a script:2:b
 
     local SCRIPT_NAME=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
     local SCRIPT_DESC=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
@@ -35,8 +34,9 @@ execute_chain() {
             local SCRIPT_RET_VAL=`echo -e "${LINE}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
             local HEAD_LINK_SCRIPT=`echo -e "${LINE}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
             
-            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh"
+            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> bp_error_desc
             EXIT_STATUS=$?
+            log_debug "exit status: ${EXIT_STATUS}"
 
             if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
                 #dump_processor_info "$LINE"
@@ -69,8 +69,11 @@ read_doc_flow() {
 
     # Execute script and if it is OK continue with the chain
     local HEAD_LINK_SCRIPT=`echo -e "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
-    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh
-    if [ $? -eq ${SCRIPT_RET_VAL} ]; then
+    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> bp_error_desc
+    EXIT_STATUS=$?
+    log_debug "exit status: ${EXIT_STATUS}"
+
+    if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
         local NEXT_SCRIPT_STR=`echo -e "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
         execute_chain "${NEXT_SCRIPT_STR}"
     fi
