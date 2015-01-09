@@ -1,4 +1,5 @@
 # bash pipeline general functions. 
+# Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
 # Including the necessary script files:
 . bp_flow.env 2> /dev/null || {
@@ -136,7 +137,7 @@ start_scripts() {
 			if [ -f "${WORKING_DIR}/${script}" ]; then
 				log_debug "Running: $script  SCRIPT"
 
-	            # Execute sequentials scripts within the WORKING_DIR
+	            # Execute sequential scripts within the WORKING_DIR
 	            # and send the output to the "bp_error_desc" file.
 
 				"${WORKING_DIR}/${script}" 2> bp_error_desc

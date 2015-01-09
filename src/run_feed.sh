@@ -4,7 +4,7 @@
 if [ -f ./bplib.sh ]; then
     . ./bplib.sh
 else
-    echo -e "[`date '+%F %T'`] [ERROR] bp_functions.sh NOT found."
+    echo -e "[`date '+%F %T'`] [ERROR] bplib.sh NOT found."
     exit 76
 fi
 
