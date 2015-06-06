@@ -1,7 +1,5 @@
 #!/bin/bash
 # Test script that finishes incorrectly ... 
-ls -larth file_not_found || {
-	exit $?
-}
+echo "Running $0"
 
 exit 0
