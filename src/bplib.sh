@@ -1,23 +1,26 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-# Including the necessary script files:
+readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
+readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
+readonly ERROR_EMPTY_ARGUMENT=70
+
 . bp_flow.env 2> /dev/null || {
-    echo -e "\n[ERROR] bp_flow.env file not found.\n"
-    exit 68
+    echo -e "[ERROR] bp_flow.env file not found."
+    exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
 }
 
 log_debug () {
 	if [ -z "$1" ]; then
 		echo "ERROR, empty argument"
-		exit 78
+		exit ${ERROR_EMPTY_DEBUG_ARGUMENT}
 	fi
 
 	if [ ${DEBUG} -eq 1 ]; then
 		if [ ${INCLUDE_DATE_LOG} -eq 1 ]; then
-			echo -e "[`date '+%F %T'`] [DEBUG] $1" | tee -a "${DEBUG_FILE}"
+			echo "[`date '+%F %T'`] [DEBUG] $1" | tee -a "${DEBUG_FILE}"
 		else
-			echo -e "[DEBUG] $1" | tee -a "${DEBUG_FILE}"
+			echo "[DEBUG] $1" | tee -a "${DEBUG_FILE}"
 		fi
 	fi
 
@@ -35,26 +38,26 @@ dump_error_info() {
 	(
 		. bp.error
 		echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
-		echo -e "EXIT_CODE =======> ${EXIT_CODE}"
-		echo -e "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
+		echo "EXIT_CODE =======> ${EXIT_CODE}"
+		echo "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
 
-		echo -e "Use bp_continue.sh once the problem has been fixed.\n"
-		rm bp.error
+		echo "Use bp_continue.sh once the problem has been fixed.\n"
+		rm bp.error 2> /dev/null
 	)
-	rm bp_error_desc
+	rm bp_error_desc 2> /dev/null
 }
 
 dump_processor_info() {
     
     if [ -z "$1" ]; then
-        echo -e "ERROR, argument empty"
-        return 1
+        echo "ERROR, argument empty"
+        return ${ERROR_EMPTY_ARGUMENT}
     fi
 
-    local SCRIPT_NAME=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
-    local SCRIPT_DESC=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
-    local SCRIPT_RET_VAL=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
-    local NEXT_SCRIPTS=`echo -e "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
+    local SCRIPT_NAME=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
+    local SCRIPT_DESC=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
+    local SCRIPT_RET_VAL=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
+    local NEXT_SCRIPTS=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
 
     echo -e "{\n\tScript: ${SCRIPT_NAME}"
     echo -e "\tDescription: ${SCRIPT_DESC}"
@@ -80,8 +83,9 @@ execute_chain() {
                 #dump_processor_info "$LINE"
                 execute_chain `echo -e "$LINE" | awk -F ":" '{print $4}'`
             else
-                echo -e "[FATAL] Different exit status ... $EXIT_STATUS"
-                #dump_processor_info "${LINE}"
+                echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
+                dump_processor_info "${LINE}"
+                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "`cat ./bp_error_desc | tr '\n' '@'`"
                 exit 78
             fi
         fi
@@ -92,8 +96,8 @@ execute_chain() {
 read_doc_flow() {
     
     if [ -z "${FLOW_FILE}" ]; then
-        echo -e "ERROR, argument empty."
-        exit 78
+        echo "ERROR, empty argument."
+        exit ${ERROR_EMPTY_ARGUMENT}
     fi
     
     if [ ! -f "${FLOW_FILE}" ]; then
@@ -111,6 +115,8 @@ read_doc_flow() {
     EXIT_STATUS=$?
     log_debug "exit status: ${EXIT_STATUS}"
 
+    # If the exit status matches the defined
+    # script return value:
     if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
         local NEXT_SCRIPT_STR=`echo -e "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
         execute_chain "${NEXT_SCRIPT_STR}"
@@ -139,7 +145,6 @@ start_scripts() {
 
 	            # Execute sequential scripts within the WORKING_DIR
 	            # and send the output to the "bp_error_desc" file.
-
 				"${WORKING_DIR}/${script}" 2> bp_error_desc
 				EXIT_STATUS=$?
 				log_debug "exit status: ${EXIT_STATUS}"
@@ -148,16 +153,16 @@ start_scripts() {
 					SCRIPT_NAME=`basename "${script}"`
 					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "`cat ./bp_error_desc | tr '\n' '@'`"
 					dump_error_info
-					exit ${EXIT_STATUS}
+					exit 78
 				fi
 	            
 			fi
 		done
 
 	elif [ "${FLOW_TYPE}" = "DOC" ]; then
-		echo -e "Doc flow"
+        read_doc_flow
 	else
-		echo -e "Other, error, not supported ... "
+		echo "Flow type not supported."
 	fi
 
 	log_debug "Finished ${PROJ_NAME} project"

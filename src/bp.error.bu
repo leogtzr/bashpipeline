@@ -1,0 +1,3 @@
+FAILED_SCRIPT=
+EXIT_CODE=0
+ERROR_MSG="cp: no se puede efectuar `stat' sobre «jhsdf»: No existe el archivo o el directorio@"

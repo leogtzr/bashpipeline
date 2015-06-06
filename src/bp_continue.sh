@@ -1,17 +1,20 @@
 #!/bin/bash
 
+readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
+readonly ERROR_INVALID_ARGUMENT_NUMBER=69
+
 . bp_flow.env 2> /dev/null || {
 	echo -e "\n[ERROR] bp_flow.env file not found.\n"
-	exit 68
+	exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
 }
 
 if [ $# -ne 1 ]; then
-	echo -e "ERROR, please enter an initial script argument."
-	exit 81
+	echo "ERROR, please enter an initial script argument."
+	exit ${ERROR_INVALID_ARGUMENT_NUMBER}
 fi
 
 if [ ! -f "bp.error" ]; then
-	echo -e "Nothing to do ... "
+	echo "Nothing to do ... "
 	exit 0
 else
 
@@ -19,7 +22,7 @@ else
 	if [ -f ./bplib.sh ]; then
 		. ./bplib.sh
 	else
-		echo -e "[`date '+%F %T'`] [ERROR] bplib.sh NOT found."
+		echo "[`date '+%F %T'`] [ERROR] bplib.sh NOT found."
 		exit 76
 	fi
 
@@ -47,7 +50,7 @@ else
 
 		done
 
-		rm -vf "./bp.error"
+		rm -vf "./bp.error" 2> /dev/null
 		exit 0
 
 	} || {

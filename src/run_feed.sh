@@ -8,9 +8,9 @@ else
     exit 76
 fi
 
-# Start execution
+# Start scripts execution
 start_scripts && {
-	echo -e "$? ... finished ... "
+    echo -e "$? ... finished ... "
 }
 
 exit 0
