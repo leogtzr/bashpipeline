@@ -54,15 +54,17 @@ dump_processor_info() {
         return ${ERROR_EMPTY_ARGUMENT}
     fi
 
-    local SCRIPT_NAME=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
-    local SCRIPT_DESC=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
-    local SCRIPT_RET_VAL=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
-    local NEXT_SCRIPTS=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
+    if [ ${DEBUG} -eq 1 ]; then
+        local SCRIPT_NAME=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
+        local SCRIPT_DESC=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
+        local SCRIPT_RET_VAL=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
+        local NEXT_SCRIPTS=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
 
-    echo -e "{\n\tScript: ${SCRIPT_NAME}"
-    echo -e "\tDescription: ${SCRIPT_DESC}"
-    echo -e "\tExpected status: ${SCRIPT_RET_VAL}"
-    echo -e "\tNext scripts: ${NEXT_SCRIPTS}\n}"
+        echo -e "{\n\tScript: ${SCRIPT_NAME}"
+        echo -e "\tDescription: ${SCRIPT_DESC}"
+        echo -e "\tExpected status: ${SCRIPT_RET_VAL}"
+        echo -e "\tNext scripts: ${NEXT_SCRIPTS}\n}"
+    fi
 
 }
 
