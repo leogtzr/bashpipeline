@@ -53,10 +53,10 @@ dump_processor_info() {
     fi
 
     if [ ${DEBUG} -eq 1 ]; then
-        local SCRIPT_NAME=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
-        local SCRIPT_DESC=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $2}'`
-        local SCRIPT_RET_VAL=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
-        local NEXT_SCRIPTS=`echo "$1" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
+        local SCRIPT_NAME=`echo "$1" | awk -F ":" '{print $1}'`
+        local SCRIPT_DESC=`echo "$1" | awk -F ":" '{print $2}'`
+        local SCRIPT_RET_VAL=`echo "$1" | awk -F ":" '{print $3}'`
+        local NEXT_SCRIPTS=`echo "$1" | awk -F ":" '{print $4}'`
 
         echo -e "{\n\tScript: ${SCRIPT_NAME}"
         echo -e "\tDescription: ${SCRIPT_DESC}"
@@ -72,8 +72,8 @@ execute_chain() {
         if [ ! -z "${LINE}" ]; then
             
             dump_processor_info "${LINE}"
-            local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
-            local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
+            local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
+            local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
             
             "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> bp_error_desc
             EXIT_STATUS=$?
@@ -106,11 +106,11 @@ read_doc_flow() {
     fi
  
     local HEAD_LINK=`grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | sed -n 1p`
-    local SCRIPT_RET_VAL=`echo "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $3}'`
+    local SCRIPT_RET_VAL=`echo "${HEAD_LINK}" | awk -F ":" '{print $3}'`
     dump_processor_info "${HEAD_LINK}"
 
     # Execute script and if it is OK continue with the chain
-    local HEAD_LINK_SCRIPT=`echo "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $1}'`
+    local HEAD_LINK_SCRIPT=`echo "${HEAD_LINK}" | awk -F ":" '{print $1}'`
     "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> bp_error_desc
     EXIT_STATUS=$?
     log_debug "exit status: ${EXIT_STATUS}"
@@ -118,7 +118,7 @@ read_doc_flow() {
     # If the exit status matches the defined
     # script return value:
     if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
-        local NEXT_SCRIPT_STR=`echo "${HEAD_LINK}" | awk -F "${FLOW_DOC_DELIMITER}" '{print $4}'`
+        local NEXT_SCRIPT_STR=`echo "${HEAD_LINK}" | awk -F ":" '{print $4}'`
         execute_chain "${NEXT_SCRIPT_STR}"
     fi
 
