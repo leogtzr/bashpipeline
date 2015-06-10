@@ -1,7 +1,6 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
 
@@ -27,7 +26,7 @@ log_debug () {
 }
 
 build_bp_error_file() {
-	cat <<-BP_ERROR_CONTENT > bp.error
+	cat <<-BP_ERROR_CONTENT > .bp.error
 	FAILED_SCRIPT=$1
 	EXIT_CODE=$2
 	ERROR_MSG="$3"
@@ -36,13 +35,12 @@ build_bp_error_file() {
 
 dump_error_info() {
 	(
-		. bp.error
+		. .bp.error
 		echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
 		echo "EXIT_CODE =======> ${EXIT_CODE}"
 		echo "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
 
-		echo "Use bp_continue.sh once the problem has been fixed.\n"
-		rm bp.error 2> /dev/null
+		echo "Use bp_continue.sh once the problem has been fixed."
 	)
 	rm bp_error_desc 2> /dev/null
 }
