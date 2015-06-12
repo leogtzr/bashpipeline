@@ -95,6 +95,8 @@ execute_chain() {
 # Read the *.flow file
 read_doc_flow() {
     
+    echo PUTO
+
     if [ -z "${FLOW_FILE}" ]; then
         echo "ERROR, empty argument."
         exit ${ERROR_EMPTY_ARGUMENT}
@@ -124,15 +126,6 @@ read_doc_flow() {
 
 }
 
-# Punto inicial del programa ... 
-# Inicia la ejecución de los scripts dentro del directorio
-# WORKING_DIR.
-
-# Si alguno de los scripts dentro del directorio WORKING_DIR falla
-# todo el proceso se detiene. 
-# Cuando el error ha sido corregido, se puede utilizar el script
-# bp_continue.sh para continuar la ejecución del proceso:
-# bp_continue.sh 5.sh
 start_scripts() {
 	
 	log_debug "Beginning ${PROJ_NAME} project"

@@ -30,9 +30,8 @@ else
         exit 76
     fi
 
-    SCRIPT_TO_START=$1
-
     if [ "${FLOW_TYPE}" = "SEQ" ]; then
+        SCRIPT_TO_START=$1
         awk -F '=' '/^FAILED_SCRIPT/ {print $2}' .bp.error | grep -Eq "^${SCRIPT_TO_START}$" && {
             START_POINT=`awk -F '=' '/^FAILED_SCRIPT/ {print $2}' .bp.error | cut -f1 -d'.'`
             for script in `seq -f "%g.sh" ${START_POINT} 10`; do
@@ -57,6 +56,8 @@ else
             echo -e "\tline in the .bp.error file.\n"
         }
     else
+        SCRIPT_TO_START=$1
+        NEXT_SCRIPT_TO_EXECUTE=$2
         echo "Not yet ... "
         cat .bp.error
         exit 0
