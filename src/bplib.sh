@@ -95,8 +95,6 @@ execute_chain() {
 # Read the *.flow file
 read_doc_flow() {
     
-    echo PUTO
-
     if [ -z "${FLOW_FILE}" ]; then
         echo "ERROR, empty argument."
         exit ${ERROR_EMPTY_ARGUMENT}
