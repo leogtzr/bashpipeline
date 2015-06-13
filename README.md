@@ -71,7 +71,7 @@ manera:
 	$ bp_continue.sh 2.sh
 ```
 
-El script se encargará de continuar la ejecución de los siguientes scripts (*3.sh, 4.sh, 5.sh ... *) secuencialmente 
+El script se encargará de continuar la ejecución de los siguientes scripts (3.sh, 4.sh, 5.sh ... ) secuencialmente 
 dentro del directorio del proyecto.
 
 ## DOC FLOW
