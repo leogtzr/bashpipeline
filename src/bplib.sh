@@ -9,6 +9,9 @@ readonly ERROR_EMPTY_ARGUMENT=70
     exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
 }
 
+#######################################################################
+# name: log_debug
+#######################################################################
 log_debug () {
 	if [ -z "$1" ]; then
 		echo "ERROR, empty argument"
@@ -25,6 +28,11 @@ log_debug () {
 
 }
 
+#######################################################################
+# name: build_bp_error_file
+# Generates .bp.error file. This file is used by the bp_continue.sh
+# script to continue the scripts execution.
+#######################################################################
 build_bp_error_file() {
 	cat <<-BP_ERROR_CONTENT > .bp.error
 	FAILED_SCRIPT=$1
@@ -33,6 +41,10 @@ build_bp_error_file() {
 	BP_ERROR_CONTENT
 }
 
+#######################################################################
+# name: dump_error_info
+# Convenience function to show current status of the failed script.
+#######################################################################
 dump_error_info() {
 	(
 		. .bp.error
@@ -42,9 +54,12 @@ dump_error_info() {
 
 		echo "Use bp_continue.sh once the problem has been fixed."
 	)
-	rm bp_error_desc 2> /dev/null
+	rm .bp_error_desc 2> /dev/null
 }
 
+#######################################################################
+# name: dump_processor_info
+#######################################################################
 dump_processor_info() {
     
     if [ -z "$1" ]; then
@@ -66,6 +81,10 @@ dump_processor_info() {
 
 }
 
+#######################################################################
+# name: execute_chain
+# Function that executes recursively scripts defined in the FLOW_FILE file.
+#######################################################################
 execute_chain() {
 	for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
         LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
@@ -75,7 +94,7 @@ execute_chain() {
             local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
             local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
             
-            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> bp_error_desc
+            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
             EXIT_STATUS=$?
             log_debug "exit status: ${EXIT_STATUS}"
 
@@ -88,13 +107,18 @@ execute_chain() {
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
 
                 dump_processor_info "${LINE}"
-                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "`cat ./bp_error_desc | tr '\n' '@'`"
+                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "`cat ./.bp_error_desc | tr '\n' '@'`"
                 exit 78
             fi
         fi
     done
 }
 
+#######################################################################
+# name: print_execute_chain
+# Convenience function to print recursively scripts that will be
+# executed.
+#######################################################################
 print_execute_chain() {
     if [ ! -z "$1" ]; then
         echo -e "\t${1}"
@@ -130,7 +154,7 @@ read_doc_flow() {
 
     # Execute script and if it is OK continue with the chain
     local HEAD_LINK_SCRIPT=`echo "${HEAD_LINK}" | awk -F ":" '{print $1}'`
-    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> bp_error_desc
+    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> .bp_error_desc
     EXIT_STATUS=$?
     log_debug "exit status: ${EXIT_STATUS}"
 
@@ -154,16 +178,16 @@ start_scripts() {
 				log_debug "Running: $script  SCRIPT"
 
 	            # Execute sequential scripts within the WORKING_DIR
-	            # and send the output to the "bp_error_desc" file.
-				"${WORKING_DIR}/${script}" 2> bp_error_desc
+	            # and send the output to the ".bp_error_desc" file.
+				"${WORKING_DIR}/${script}" 2> .bp_error_desc
 				EXIT_STATUS=$?
 				log_debug "exit status: ${EXIT_STATUS}"
 
 				if [ ${EXIT_STATUS} -ne 0 ]; then
 					SCRIPT_NAME=`basename "${script}"`
-					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "`cat ./bp_error_desc | tr '\n' '@'`"
+					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "`cat ./.bp_error_desc | tr '\n' '@'`"
 					dump_error_info
-					exit 78
+					exit ${EXIT_STATUS}
 				fi
 	            
 			fi
@@ -176,5 +200,4 @@ start_scripts() {
 	fi
 
 	log_debug "Finished ${PROJ_NAME} project"
-	
 }

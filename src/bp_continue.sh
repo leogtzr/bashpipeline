@@ -4,6 +4,7 @@
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_INVALID_ARGUMENT_NUMBER=69
 readonly ERROR_INIT_SCRIPT_NOT_FOUND=70
+readonly ERROR_FLOW_NOT_SUPPORTED=71
 
 export ERROR_BP_FLOW_FILE_NOT_FOUND
 export ERROR_INVALID_ARGUMENT_NUMBER
@@ -72,24 +73,27 @@ if [ "${FLOW_TYPE}" = "SEQ" ]; then
             fi
         done
         rm -f ".bp.error" 2> /dev/null
+        log_debug "Finished ... "
         exit 0
     } || {
         echo -e "\n\tThe script to continue does not match the: "
         awk -F "=" '/^FAILED_SCRIPT/ {print $0}' .bp.error
         echo -e "\tline in the .bp.error file.\n"
     }
-else
+elif [ "${FLOW_TYPE}" = "DOC" ]; then
     
     SCRIPT_TO_START=$1
     grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | grep -Eq "^${SCRIPT_TO_START}:" && {
+        
         SCRIPT_TO_EXECUTE_TMP=`grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | grep -E "^${SCRIPT_TO_START}" | sed -n 1p | awk -F ":" '{print $1}'`
+        
         if [ -z "${SCRIPT_TO_EXECUTE_TMP}" ]; then
             echo "Script to execute not found."
             exit 98
         fi
 
         execute_chain "${SCRIPT_TO_EXECUTE_TMP}"
-        echo "Done"
+        log_debug "Done ... "
         exit 0
 
     } || {
@@ -98,6 +102,9 @@ else
     }
 
     exit 0
+else
+    echo "Flow type not supported."
+    exit ${ERROR_FLOW_NOT_SUPPORTED}
 fi
 
 exit 0
