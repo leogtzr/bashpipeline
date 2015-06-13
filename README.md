@@ -131,7 +131,7 @@ exit 0
 
 ```
 La función start_scripts se encarga de empezar la ejecución de nuestro scripts en el directorio
-WORKING_DIR.
+*WORKING_DIR*.
 
 ```
 [0 [17:14][leo@simplebashpipeline]$ ./run_feed.sh 
@@ -154,7 +154,7 @@ Running feed/5.sh
 [2015-06-13 17:14:43] [DEBUG] Finished Data Feed Process project
 0 ... finished ... 
 ```
-Si alguno de estos scripts no termina correctamente:
+### Cómo corregir errores cuando hay un error en uno de los scripts
 ```
 [0 [17:18][leo@simplebashpipeline]$ ./run_feed.sh 
 [2015-06-13 17:18:27] [DEBUG] Beginning Data Feed Process project
@@ -170,9 +170,9 @@ EXIT_CODE =======> 78
 ERROR_MSG ======> ''
 Use bp_continue.sh once the problem has been fixed.
 ```
-en el ejemplo anterior, el script 2.sh no ha finalizado correctamente.
+en el ejemplo anterior, el script *2.sh* no ha finalizado correctamente.
 Una vez que hayamos arreglado el error, podemos continuar la ejecución de los scripts
-usando el comando bp_continue.sh:
+usando el comando *bp_continue.sh*:
 ```
 [0 [17:21][leo@simplebashpipeline]$ ./bp_continue.sh 2.sh
 [2015-06-13 17:21:10] [DEBUG] Running: 2.sh
@@ -189,6 +189,5 @@ Running feed/5.sh
 [2015-06-13 17:21:10] [DEBUG] status: 0
 [2015-06-13 17:21:10] [DEBUG] Finished ... 
 ```
-
 
 ## DOC FLOW
