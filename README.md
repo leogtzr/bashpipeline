@@ -74,4 +74,85 @@ manera:
 El script se encargará de continuar la ejecución de los siguientes scripts (3.sh, 4.sh, 5.sh ... ) secuencialmente 
 dentro del directorio del proyecto.
 
+EJEMPLO DE USO:
+1. Crear nuestros scripts secuenciales en un directorio:
+```
+[0 [17:06][leo@feed]$ ls
+1.sh  2.sh  3.sh  4.sh  5.sh
+[0 [17:06][leo@feed]$ cat *
+#!/bin/bash
+echo "Running $0"
+exit 0
+#!/bin/bash
+echo "Running $0"
+exit 0
+#!/bin/bash
+echo "Running $0"
+exit 0
+#!/bin/bash
+echo "Running $0"
+exit 0
+#!/bin/bash
+echo "Running $0"
+exit 0
+```
+2. Modificar el archivo bp_flow.env:
+```
+export PROJ_NAME="Data Feed Process"
+export FLOW_TYPE=SEQ
+export WORKING_DIR=feed
+export DEBUG=1
+export DEBUG_FILE=log_`date '+%Y%m%S_%H%M%S'`.log
+export INCLUDE_DATE_LOG=1
+```
+*PROJ_NAME* almacena el nombre del proyecto actual.
+*FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser SEQ o DOC.
+*WORKING_DIR* almacena el directorio donde se encuentran los scripts a ejecutar.
+*DEBUG* para configurar debug en la ejecución de los scripts. (0=DISABLED, 1=ENABLED).
+*DEBUG_FILE* almacena el nombre del archivo donde se almacenarán las líneas de debug.
+*INCLUDE_DATE_LOG* para configurar si las líneas de debug incluirán fecha o no. (0=DISABLED, 1=ENABLED).
+
+Para incluir la librería en nuestro script principal hacemos esto:
+run_feed.sh
+```
+#!/bin/bash
+
+if [ -f ./bplib.sh ]; then
+    . ./bplib.sh
+else
+    echo "[`date '+%F %T'`] [ERROR] bplib.sh NOT found."
+    exit 76
+fi
+
+start_scripts && {
+    echo "$? ... finished ... "
+}
+exit 0
+
+```
+La función start_scripts se encarga de empezar la ejecución de nuestro scripts en el directorio
+WORKING_DIR.
+
+```
+[0 [17:14][leo@simplebashpipeline]$ ./run_feed.sh 
+[2015-06-13 17:14:43] [DEBUG] Beginning Data Feed Process project
+[2015-06-13 17:14:43] [DEBUG] Running: 1.sh  SCRIPT
+Running feed/1.sh
+[2015-06-13 17:14:43] [DEBUG] exit status: 0
+[2015-06-13 17:14:43] [DEBUG] Running: 2.sh  SCRIPT
+Running feed/2.sh
+[2015-06-13 17:14:43] [DEBUG] exit status: 0
+[2015-06-13 17:14:43] [DEBUG] Running: 3.sh  SCRIPT
+Running feed/3.sh
+[2015-06-13 17:14:43] [DEBUG] exit status: 0
+[2015-06-13 17:14:43] [DEBUG] Running: 4.sh  SCRIPT
+Running feed/4.sh
+[2015-06-13 17:14:43] [DEBUG] exit status: 0
+[2015-06-13 17:14:43] [DEBUG] Running: 5.sh  SCRIPT
+Running feed/5.sh
+[2015-06-13 17:14:43] [DEBUG] exit status: 0
+[2015-06-13 17:14:43] [DEBUG] Finished Data Feed Process project
+0 ... finished ... 
+```
+
 ## DOC FLOW
