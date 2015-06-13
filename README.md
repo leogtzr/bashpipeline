@@ -1,10 +1,10 @@
 bash pipeline v1.0
 ------------------
-# Leo Gutiérrez R. | leogutierrezramirez@gmail.com
+## Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
 Esta librería ayudar a modularizar la ejecución de un script.
 
-# SEQUENTIAL FLOW
+## SEQUENTIAL FLOW
 
 Ejemplo:
 
@@ -74,4 +74,4 @@ manera:
 El script se encargará de continuar la ejecución de los siguientes scripts (*3.sh, 4.sh, 5.sh ... *) secuencialmente 
 dentro del directorio del proyecto.
 
-= DOC FLOW
+## DOC FLOW
