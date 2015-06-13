@@ -106,10 +106,15 @@ export DEBUG_FILE=log_`date '+%Y%m%S_%H%M%S'`.log
 export INCLUDE_DATE_LOG=1
 ```
 *PROJ_NAME* almacena el nombre del proyecto actual.
+
 *FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser SEQ o DOC.
+
 *WORKING_DIR* almacena el directorio donde se encuentran los scripts a ejecutar.
+
 *DEBUG* para configurar debug en la ejecución de los scripts. (0=DISABLED, 1=ENABLED).
+
 *DEBUG_FILE* almacena el nombre del archivo donde se almacenarán las líneas de debug.
+
 *INCLUDE_DATE_LOG* para configurar si las líneas de debug incluirán fecha o no. (0=DISABLED, 1=ENABLED).
 
 Para incluir la librería en nuestro script principal hacemos esto:
