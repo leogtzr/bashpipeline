@@ -107,7 +107,7 @@ export INCLUDE_DATE_LOG=1
 ```
 *PROJ_NAME* almacena el nombre del proyecto actual.
 
-*FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser SEQ o DOC.
+*FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser _SEQ_ o _DOC_.
 
 *WORKING_DIR* almacena el directorio donde se encuentran los scripts a ejecutar.
 
