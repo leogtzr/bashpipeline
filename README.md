@@ -1,6 +1,6 @@
 bash pipeline v1.0
 ------------------
-## Leo Gutiérrez R. | leogutierrezramirez@gmail.com
+Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
 Esta librería ayudar a modularizar la ejecución de un script.
 
