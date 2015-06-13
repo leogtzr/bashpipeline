@@ -67,7 +67,7 @@ dump_processor_info() {
 }
 
 execute_chain() {
-    for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
+	for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
         LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
         if [ ! -z "${LINE}" ]; then
             
@@ -81,13 +81,32 @@ execute_chain() {
 
             if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
                 #dump_processor_info "$LINE"
-                execute_chain `echo "$LINE" | awk -F ":" '{print $4}'`
+                local next_to_do=`echo "$LINE" | awk -F ":" '{print $4}'`
+                # echo -e "\t\t[$HEAD_LINK_SCRIPT]->[$next_to_do]"
+                execute_chain $next_to_do
             else
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
+
                 dump_processor_info "${LINE}"
                 build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "`cat ./bp_error_desc | tr '\n' '@'`"
                 exit 78
             fi
+        fi
+    done
+}
+
+print_execute_chain() {
+    if [ ! -z "$1" ]; then
+        echo -e "\t${1}"
+    fi
+    for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
+        LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
+        if [ ! -z "${LINE}" ]; then
+            dump_processor_info "${LINE}"
+            local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
+            local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
+            local NEXT_SCRIPT_TO_DO=`echo "${LINE}" | awk -F ":" '{print $4}'`
+            print_execute_chain ${NEXT_SCRIPT_TO_DO}
         fi
     done
 }

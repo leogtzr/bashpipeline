@@ -2,4 +2,4 @@
 
 #c2 script
 echo "running $0"
-exit 2
+exit 0
