@@ -30,42 +30,42 @@ que el problema en el script ha sido resuelto.
 Con bash pipeline podemos modularizar el script en archivos secuenciales en un directorio y dejar que la
 librería se encargue de ejecutarlos secuencialmente
 
-1.sh:
+**1.sh:**
 ```
 #!/bin/bash
 # complex commands
 ...
 ```
 
-2.sh:
+**2.sh:**
 ```
 #!/bin/bash
 # complex commands
 ...
 ```
 
-3.sh:
+**3.sh:**
 ```
 #!/bin/bash
 # complex commands
 ...
 ```
 
-4.sh:
+**4.sh:**
 ```
 #!/bin/bash
 # complex commands
 ...
 ```
 
-5.sh:
+**5.sh:**
 ```
 #!/bin/bash
 # complex commands
 ...
 ```
 
-Si la ejecución de alguno de estos scripts falla, podemos continuar la ejecución utilizar el comando bp_continue.sh de la siguiente
+Si la ejecución de alguno de estos scripts falla, podemos continuar la ejecución utilizar el comando *bp_continue.sh* de la siguiente
 manera:
 ```
 	$ bp_continue.sh 2.sh
