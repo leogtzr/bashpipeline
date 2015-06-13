@@ -96,7 +96,7 @@ exit 0
 echo "Running $0"
 exit 0
 ```
-2. Modificar el archivo bp_flow.env:
+2. Modificar el archivo *bp_flow.env*:
 ```
 export PROJ_NAME="Data Feed Process"
 export FLOW_TYPE=SEQ
