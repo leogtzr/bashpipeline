@@ -69,7 +69,7 @@ Si la ejecución de alguno de estos scripts falla, podemos continuar la ejecuci�
 manera:
 ```
 	$ bp_continue.sh 2.sh
-```
+```	
 
 El script se encargará de continuar la ejecución de los siguientes scripts (3.sh, 4.sh, 5.sh ... ) secuencialmente 
 dentro del directorio del proyecto.
@@ -255,3 +255,5 @@ bp_flow.env:
 export FLOW_TYPE=DOC
 export FLOW_FILE=project2.flow
 ```
+
+https://github.com/leogtzr/bashpipeline.wiki.git

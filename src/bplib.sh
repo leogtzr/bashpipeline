@@ -3,6 +3,7 @@
 
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
+readonly ERROR_SCRIPT_NOT_FOUND=71
 
 . bp_flow.env 2> /dev/null || {
     echo "[ERROR] bp_flow.env file not found."
@@ -94,6 +95,11 @@ execute_chain() {
             local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
             local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
             
+            if [ ! -f "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" ]; then
+                echo "ERROR, script does not exist."
+                exit ${ERROR_SCRIPT_NOT_FOUND}
+            fi
+
             "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
             EXIT_STATUS=$?
             log_debug "exit status: ${EXIT_STATUS}"
