@@ -249,4 +249,9 @@ e:e script:0:
 ```
 
 Para habilitar este tipo de ejecución, solo debemos de especificar el tipo de ejecución **DOC** en el archivo 
-bp_flow.env.
+bp_flow.env:
+
+```
+export FLOW_TYPE=DOC
+export FLOW_FILE=project2.flow
+```
