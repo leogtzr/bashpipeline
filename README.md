@@ -203,7 +203,6 @@ formato:
 
 ```
 # syntax:
-#
 # script:description:return value:script[,script]
 # more lines ...
 ```
