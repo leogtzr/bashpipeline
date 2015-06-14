@@ -99,9 +99,7 @@ execute_chain() {
             log_debug "exit status: ${EXIT_STATUS}"
 
             if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
-                #dump_processor_info "$LINE"
                 local next_to_do=`echo "$LINE" | awk -F ":" '{print $4}'`
-                # echo -e "\t\t[$HEAD_LINK_SCRIPT]->[$next_to_do]"
                 execute_chain $next_to_do
             else
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
