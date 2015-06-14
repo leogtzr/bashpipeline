@@ -95,11 +95,6 @@ execute_chain() {
             local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
             local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
             
-            if [ ! -f "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" ]; then
-                echo "ERROR, script does not exist."
-                exit ${ERROR_SCRIPT_NOT_FOUND}
-            fi
-
             "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
             EXIT_STATUS=$?
             log_debug "exit status: ${EXIT_STATUS}"
@@ -145,6 +140,10 @@ read_doc_flow() {
     # script return value:
     if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
         local NEXT_SCRIPT_STR=`echo "${HEAD_LINK}" | awk -F ":" '{print $4}'`
+        if [ ! -f "${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh" ]; then
+            echo "ERROR, ==>${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh<== not found."
+            exit ${ERROR_SCRIPT_NOT_FOUND}
+        fi
         execute_chain "${NEXT_SCRIPT_STR}"
     fi
 
