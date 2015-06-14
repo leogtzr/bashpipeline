@@ -206,3 +206,18 @@ formato:
 # script:description:return value:script[,script]
 # more lines ...
 ```
+```
+                                > (d0) 
+                              ~
+                            ~
+                          ~
+                     > (c1) ~ ~ ~ > (d1) 
+                   ~                  ~
+                 ~                      ~
+               ~                          ~
+(a) ~ ~ ~ ~ > (b)                           > (e) 
+               ~                          ~
+                 ~                      ~
+                   ~                  ~
+                     > (c2) ~ ~ ~ > (d2)
+```
