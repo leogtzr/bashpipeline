@@ -112,27 +112,6 @@ execute_chain() {
     done
 }
 
-#######################################################################
-# name: print_execute_chain
-# Convenience function to print recursively scripts that will be
-# executed.
-#######################################################################
-print_execute_chain() {
-    if [ ! -z "$1" ]; then
-        echo -e "\t${1}"
-    fi
-    for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
-        LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
-        if [ ! -z "${LINE}" ]; then
-            dump_processor_info "${LINE}"
-            local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
-            local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
-            local NEXT_SCRIPT_TO_DO=`echo "${LINE}" | awk -F ":" '{print $4}'`
-            print_execute_chain ${NEXT_SCRIPT_TO_DO}
-        fi
-    done
-}
-
 # Read the *.flow file
 read_doc_flow() {
     
