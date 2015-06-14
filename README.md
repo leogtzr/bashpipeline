@@ -247,3 +247,6 @@ d1:d1 script:0:e
 d2:d2 script:0:e
 e:e script:0:
 ```
+
+Para habilitar este tipo de ejecución, solo debemos de especificar el tipo de ejecución **DOC** en el archivo 
+bp_flow.env.
