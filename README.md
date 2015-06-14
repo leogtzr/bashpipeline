@@ -231,6 +231,11 @@ El archivo donde dicha ejecución es definida tiene el formato siguiente:
 # more lines ...
 ```
 
+El primer campo es el nombre del script a ejecutar.
+El segundo campo es una descripción sobre el script a ejecutar (opcional).
+El tercer campo es el valor de retorno que se espera del script a ejecutar. 
+El cuarto campo son los siguientes scripts a ejecutar.
+
 Ejemplo:
 ```
 a:a script:0:b
