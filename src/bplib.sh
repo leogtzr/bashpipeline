@@ -86,7 +86,7 @@ dump_processor_info() {
 # Function that executes recursively scripts defined in the FLOW_FILE file.
 #######################################################################
 execute_chain() {
-	for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
+    for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
         LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
         if [ ! -z "${LINE}" ]; then
             
