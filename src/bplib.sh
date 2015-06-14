@@ -1,9 +1,10 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
+readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
-readonly ERROR_SCRIPT_NOT_FOUND=71
+readonly ERROR_SCRIPT_NOT_FOUND=7
 
 . bp_flow.env 2> /dev/null || {
     echo "[ERROR] bp_flow.env file not found."
@@ -97,7 +98,7 @@ execute_chain() {
             
             "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
             EXIT_STATUS=$?
-            log_debug "exit status: ${EXIT_STATUS}"
+            log_debug "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh, exit status: ${EXIT_STATUS}"
 
             if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
                 local next_to_do=`echo "$LINE" | awk -F ":" '{print $4}'`
@@ -123,7 +124,7 @@ read_doc_flow() {
     
     if [ ! -f "${FLOW_FILE}" ]; then
         echo "ERROR, flow file not found."
-        exit 78
+        exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
     fi
  
     local HEAD_LINK=`grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | sed -n 1p`
