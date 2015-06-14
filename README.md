@@ -198,14 +198,10 @@ Running feed/5.sh
 ## DOC FLOW
 
 Doc flow es otro tipo de ejecución modular de scripts en nuestro proyecto.
-El flujo de ejecución es definido en un archivo externo (FLOW_FILE). Este archivo tiene el siguiente
-formato:
+El flujo de ejecución es definido en un archivo externo (FLOW_FILE). 
+Los scripts dentro de este archivo son ejecutados en cadena. Podemos imaginar una estructura de árbol
+como la siguiente:
 
-```
-# syntax:
-# script:description:return value:script[,script]
-# more lines ...
-```
 ```
                                 > (d0) 
                               ~
@@ -220,4 +216,29 @@ formato:
                  ~                      ~
                    ~                  ~
                      > (c2) ~ ~ ~ > (d2)
+```
+
+El script (a) es ejecutado primero, si su ejecución es exitosa, se ejecuta (b), si la ejecución
+de (b) es exitosa, entonces se ejecuta (c1), luego (d0) y (d1), después de (d1) se ejecuta finalmente a 
+(e). Luego la ejecución continua con (c2), luego (d2) y finalmente (e).
+Como se puede ver, la ejecución de scripts se puede dividir y mezclar entre ellos.
+
+El archivo donde dicha ejecución es definida tiene el formato siguiente:
+
+```
+# syntax:
+# script:description:return value:script[,script]
+# more lines ...
+```
+
+Ejemplo:
+```
+a:a script:0:b
+b:b script:0:c1,c2
+c1:c1 script:2:d0,d1
+c2:c2 script:0:d2
+d0:d0 script:0:
+d1:d1 script:0:e
+d2:d2 script:0:e
+e:e script:0:
 ```
