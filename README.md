@@ -196,3 +196,6 @@ Running feed/5.sh
 ```
 
 ## DOC FLOW
+
+Doc flow es otro tipo de ejecución modular de scripts en nuestro proyecto.
+El flujo de ejecución es definido en un archivo llamado *bp_flow.env*, el cual tiene el siguiente formato:
