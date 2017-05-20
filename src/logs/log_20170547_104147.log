@@ -1,9 +1,0 @@
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/b.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/c1.sh, exit status: 2
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/d0.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/d1.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/e.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/c2.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/d2.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] doc_flow_test/e.sh, exit status: 0
-[2017-05-20 10:41:47] [DEBUG] Done ... 

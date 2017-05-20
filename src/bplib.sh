@@ -60,7 +60,7 @@ dump_error_info() {
 
 		echo "Use bp_continue.sh once the problem has been fixed."
 	)
-	rm ".bp_error_desc" 2> /dev/null
+	rm "${BP_ERROR_DESCRIPTION}" 2> /dev/null
 }
 
 #######################################################################
@@ -104,7 +104,7 @@ execute_chain() {
             local SCRIPT_RET_VAL=$(echo "${LINE}" | awk -F ":" '{print $3}')
             local HEAD_LINK_SCRIPT=$(echo "${LINE}" | awk -F ":" '{print $1}')
             
-            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
+            "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> "${BP_ERROR_DESCRIPTION}"
             EXIT_STATUS=${?}
             log_debug "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh, exit status: ${EXIT_STATUS}"
 
@@ -115,7 +115,7 @@ execute_chain() {
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
 
                 dump_processor_info "${LINE}"
-                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
+                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
                 exit 78
             fi
         fi
@@ -141,7 +141,7 @@ read_doc_flow() {
 
     # Execute script and if it is OK continue with the chain
     local HEAD_LINK_SCRIPT=$(echo "${HEAD_LINK}" | awk -F ":" '{print $1}')
-    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> .bp_error_desc
+    "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> "${BP_ERROR_DESCRIPTION}"
     local EXIT_STATUS=${?}
     log_debug "exit status: ${EXIT_STATUS}"
 
@@ -166,17 +166,17 @@ start_scripts() {
 		
 		for script in $(seq -f "%g.sh" ${START_POINT} 10); do
 			if [[ -f "${WORKING_DIR}/${script}" ]]; then
-				log_debug "Running: ${script}  SCRIPT"
+				log_debug "Running script '${script}'"
 
 	            # Execute sequential scripts within the WORKING_DIR
 	            # and send the output to the ".bp_error_desc" file.
-				"${WORKING_DIR}/${script}" 2> .bp_error_desc
+				"${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
 				EXIT_STATUS=$?
 				log_debug "exit status: ${EXIT_STATUS}"
 
 				if ((${EXIT_STATUS} != 0)); then
 					local SCRIPT_NAME=$(basename "${script}")
-					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
+					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
 					dump_error_info
 					exit ${EXIT_STATUS}
 				fi
