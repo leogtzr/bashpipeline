@@ -1,13 +1,14 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
+readonly BP_FLOW_ENV_FILENAME="bp_flow.env"
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
 readonly ERROR_SCRIPT_NOT_FOUND=7
 
-. bp_flow.env 2> /dev/null || {
-    echo "[ERROR] bp_flow.env file not found."
+. "${BP_FLOW_ENV_FILENAME}" 2> /dev/null || {
+    echo "[ERROR] ${BP_FLOW_ENV_FILENAME} file not found."
     exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
 }
 
@@ -15,16 +16,16 @@ readonly ERROR_SCRIPT_NOT_FOUND=7
 # name: log_debug
 #######################################################################
 log_debug () {
-	if [ -z "$1" ]; then
+	if [[ -z "${1}" ]]; then
 		echo "ERROR, empty argument"
 		exit ${ERROR_EMPTY_DEBUG_ARGUMENT}
 	fi
 
-	if [ ${DEBUG} -eq 1 ]; then
-		if [ ${INCLUDE_DATE_LOG} -eq 1 ]; then
-			echo "[`date '+%F %T'`] [DEBUG] $1" | tee -a "${DEBUG_FILE}"
+	if ((${DEBUG} == 1)); then
+		if ((${INCLUDE_DATE_LOG} == 1)); then
+			echo "[$(date '+%F %T')] [DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
 		else
-			echo "[DEBUG] $1" | tee -a "${DEBUG_FILE}"
+			echo "[DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
 		fi
 	fi
 
@@ -37,8 +38,8 @@ log_debug () {
 #######################################################################
 build_bp_error_file() {
 	cat <<-BP_ERROR_CONTENT > .bp.error
-	FAILED_SCRIPT=$1
-	EXIT_CODE=$2
+	FAILED_SCRIPT=${1}
+	EXIT_CODE=${2}
 	ERROR_MSG="$3"
 	BP_ERROR_CONTENT
 }
@@ -56,7 +57,7 @@ dump_error_info() {
 
 		echo "Use bp_continue.sh once the problem has been fixed."
 	)
-	rm .bp_error_desc 2> /dev/null
+	rm ".bp_error_desc" 2> /dev/null
 }
 
 #######################################################################
@@ -64,7 +65,7 @@ dump_error_info() {
 #######################################################################
 dump_processor_info() {
     
-    if [ -z "$1" ]; then
+    if [[ -z "${1}" ]]; then
         echo "ERROR, argument empty"
         return ${ERROR_EMPTY_ARGUMENT}
     fi
