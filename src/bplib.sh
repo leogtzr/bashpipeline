@@ -1,7 +1,9 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-readonly BP_FLOW_ENV_FILENAME="bp_flow.env"
+readonly WORK_DIR=$(dirname "${0}" 2> /dev/null)
+readonly BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
+readonly BP_ERROR_FILE="${WORK_DIR}/.bp.error"
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
@@ -37,7 +39,7 @@ log_debug () {
 # script to continue the scripts execution.
 #######################################################################
 build_bp_error_file() {
-	cat <<-BP_ERROR_CONTENT > .bp.error
+	cat <<-BP_ERROR_CONTENT > "${BP_ERROR_FILE}"
 	FAILED_SCRIPT=${1}
 	EXIT_CODE=${2}
 	ERROR_MSG="$3"
@@ -50,7 +52,7 @@ build_bp_error_file() {
 #######################################################################
 dump_error_info() {
 	(
-		. .bp.error
+		. "${BP_ERROR_FILE}"
 		echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
 		echo "EXIT_CODE =======> ${EXIT_CODE}"
 		echo "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
