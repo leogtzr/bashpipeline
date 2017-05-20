@@ -4,6 +4,7 @@
 readonly WORK_DIR=$(dirname "${0}" 2> /dev/null)
 readonly BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
 readonly BP_ERROR_FILE="${WORK_DIR}/.bp.error"
+readonly BP_ERROR_DESCRIPTION=".bp_error_desc"
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
@@ -114,7 +115,7 @@ execute_chain() {
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
 
                 dump_processor_info "${LINE}"
-                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "`cat ./.bp_error_desc | tr '\n' '@'`"
+                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
                 exit 78
             fi
         fi
@@ -159,7 +160,7 @@ read_doc_flow() {
 
 start_scripts() {
 	
-	log_debug "Beginning ${PROJ_NAME} project"
+	log_debug "Beginning ${PROJECT_NAME} project"
 
 	if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
 		
@@ -175,7 +176,7 @@ start_scripts() {
 
 				if ((${EXIT_STATUS} != 0)); then
 					local SCRIPT_NAME=$(basename "${script}")
-					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "`cat ./.bp_error_desc | tr '\n' '@'`"
+					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
 					dump_error_info
 					exit ${EXIT_STATUS}
 				fi
@@ -189,6 +190,6 @@ start_scripts() {
 		echo "Flow type not supported."
 	fi
 
-	log_debug "Finished ${PROJ_NAME} project"
+	log_debug "${PROJECT_NAME} project finished."
 }
 

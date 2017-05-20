@@ -98,14 +98,14 @@ exit 0
 ```
 2. Modificar el archivo *bp_flow.env*:
 ```
-export PROJ_NAME="Data Feed Process"
+export PROJECT_NAME="Data Feed Process"
 export FLOW_TYPE=SEQ
 export WORKING_DIR=feed
 export DEBUG=1
 export DEBUG_FILE=log_`date '+%Y%m%S_%H%M%S'`.log
 export INCLUDE_DATE_LOG=1
 ```
-*PROJ_NAME* almacena el nombre del proyecto actual.
+*PROJECT_NAME* almacena el nombre del proyecto actual.
 
 *FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser _SEQ_ o _DOC_.
 

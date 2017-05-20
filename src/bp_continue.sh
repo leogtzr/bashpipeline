@@ -1,7 +1,9 @@
 #!/bin/bash
 # Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
-readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
+# set -x
+
+# readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_INVALID_ARGUMENT_NUMBER=69
 readonly ERROR_INIT_SCRIPT_NOT_FOUND=70
 readonly ERROR_FLOW_NOT_SUPPORTED=71
