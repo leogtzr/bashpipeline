@@ -70,11 +70,12 @@ dump_processor_info() {
         return ${ERROR_EMPTY_ARGUMENT}
     fi
 
-    if [ ${DEBUG} -eq 1 ]; then
-        local SCRIPT_NAME=`echo "$1" | awk -F ":" '{print $1}'`
-        local SCRIPT_DESC=`echo "$1" | awk -F ":" '{print $2}'`
-        local SCRIPT_RET_VAL=`echo "$1" | awk -F ":" '{print $3}'`
-        local NEXT_SCRIPTS=`echo "$1" | awk -F ":" '{print $4}'`
+    if (( ${DEBUG} == 1)); then
+        
+        local -r SCRIPT_NAME=`echo "$1" | awk -F ":" '{print $1}'`
+        local -r SCRIPT_DESC=`echo "$1" | awk -F ":" '{print $2}'`
+        local -r SCRIPT_RET_VAL=`echo "$1" | awk -F ":" '{print $3}'`
+        local -r NEXT_SCRIPTS=`echo "$1" | awk -F ":" '{print $4}'`
 
         echo -e "{\n\tScript: ${SCRIPT_NAME}"
         echo -e "\tDescription: ${SCRIPT_DESC}"
