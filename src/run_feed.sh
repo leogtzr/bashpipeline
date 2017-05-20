@@ -1,7 +1,7 @@
 #!/bin/bash
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-readonly WORK_DIR=$(dirname "${0}" 2> /dev/null)
+WORK_DIR=$(dirname "${0}" 2> /dev/null)
 readonly BP_LIB_NOT_FOUND_ERROR=76
 
 . "${WORK_DIR}/bplib.sh" || {
@@ -15,3 +15,4 @@ start_scripts && {
 }
 
 exit 0
+

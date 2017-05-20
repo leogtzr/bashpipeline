@@ -72,7 +72,7 @@ dump_processor_info() {
         return ${ERROR_EMPTY_ARGUMENT}
     fi
 
-    if (( ${DEBUG} == 1)); then
+    if ((${DEBUG} == 1)); then
 
         local -r SCRIPT_NAME=$(echo "$1" | awk -F ":" '{print $1}')
         local -r SCRIPT_DESC=$(echo "$1" | awk -F ":" '{print $2}')
@@ -92,21 +92,24 @@ dump_processor_info() {
 # Function that executes recursively scripts defined in the FLOW_FILE file.
 #######################################################################
 execute_chain() {
-    for NEXT_SCRIPT in `echo "$1" | tr ',' '\n'`; do
-        LINE=`grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}"`
-        if [ ! -z "${LINE}" ]; then
+	
+	local NEXT_SCRIPT LINE EXIT_STATUS next_to_do
+
+    for NEXT_SCRIPT in $(echo "${1}" | tr ',' '\n'); do
+        LINE=$(grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}")
+        if [[ ! -z "${LINE}" ]]; then
             
             dump_processor_info "${LINE}"
-            local SCRIPT_RET_VAL=`echo "${LINE}" | awk -F ":" '{print $3}'`
-            local HEAD_LINK_SCRIPT=`echo "${LINE}" | awk -F ":" '{print $1}'`
+            local SCRIPT_RET_VAL=$(echo "${LINE}" | awk -F ":" '{print $3}')
+            local HEAD_LINK_SCRIPT=$(echo "${LINE}" | awk -F ":" '{print $1}')
             
             "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh" 2> .bp_error_desc
-            EXIT_STATUS=$?
+            EXIT_STATUS=${?}
             log_debug "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh, exit status: ${EXIT_STATUS}"
 
-            if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
-                local next_to_do=`echo "$LINE" | awk -F ":" '{print $4}'`
-                execute_chain $next_to_do
+            if (( ${EXIT_STATUS} == ${SCRIPT_RET_VAL} )); then
+                local next_to_do=$(echo "${LINE}" | awk -F ":" '{print $4}')
+                execute_chain "${next_to_do}"
             else
                 echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
 
@@ -121,31 +124,31 @@ execute_chain() {
 # Read the *.flow file
 read_doc_flow() {
     
-    if [ -z "${FLOW_FILE}" ]; then
+    if [[ -z "${FLOW_FILE}" ]]; then
         echo "ERROR, empty argument."
         exit ${ERROR_EMPTY_ARGUMENT}
     fi
     
-    if [ ! -f "${FLOW_FILE}" ]; then
+    if [[ ! -f "${FLOW_FILE}" ]]; then
         echo "ERROR, flow file not found."
         exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
     fi
  
-    local HEAD_LINK=`grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | sed -n 1p`
-    local SCRIPT_RET_VAL=`echo "${HEAD_LINK}" | awk -F ":" '{print $3}'`
+    local HEAD_LINK=$(grep --extended-regexp --invert-match '^#' "${FLOW_FILE}" | grep --extended-regexp --invert-match '^$' | sed -n 1p)
+    local SCRIPT_RET_VAL=$(echo "${HEAD_LINK}" | awk -F ":" '{print $3}')
     dump_processor_info "${HEAD_LINK}"
 
     # Execute script and if it is OK continue with the chain
-    local HEAD_LINK_SCRIPT=`echo "${HEAD_LINK}" | awk -F ":" '{print $1}'`
+    local HEAD_LINK_SCRIPT=$(echo "${HEAD_LINK}" | awk -F ":" '{print $1}')
     "${WORKING_DIR}"/"${HEAD_LINK_SCRIPT}".sh 2> .bp_error_desc
-    EXIT_STATUS=$?
+    local EXIT_STATUS=${?}
     log_debug "exit status: ${EXIT_STATUS}"
 
     # If the exit status matches the defined
     # script return value:
-    if [ $EXIT_STATUS -eq ${SCRIPT_RET_VAL} ]; then
-        local NEXT_SCRIPT_STR=`echo "${HEAD_LINK}" | awk -F ":" '{print $4}'`
-        if [ ! -f "${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh" ]; then
+    if (( ${EXIT_STATUS} == ${SCRIPT_RET_VAL} )); then
+        local NEXT_SCRIPT_STR=$(echo "${HEAD_LINK}" | awk -F ":" '{print $4}')
+        if [[ ! -f "${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh" ]]; then
             echo "ERROR, ==>${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh<== not found."
             exit ${ERROR_SCRIPT_NOT_FOUND}
         fi
@@ -158,11 +161,11 @@ start_scripts() {
 	
 	log_debug "Beginning ${PROJ_NAME} project"
 
-	if [ "${FLOW_TYPE}" = "SEQ" ]; then
+	if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
 		
-		for script in `seq -f "%g.sh" ${START_POINT} 10`; do
-			if [ -f "${WORKING_DIR}/${script}" ]; then
-				log_debug "Running: $script  SCRIPT"
+		for script in $(seq -f "%g.sh" ${START_POINT} 10); do
+			if [[ -f "${WORKING_DIR}/${script}" ]]; then
+				log_debug "Running: ${script}  SCRIPT"
 
 	            # Execute sequential scripts within the WORKING_DIR
 	            # and send the output to the ".bp_error_desc" file.
@@ -170,8 +173,8 @@ start_scripts() {
 				EXIT_STATUS=$?
 				log_debug "exit status: ${EXIT_STATUS}"
 
-				if [ ${EXIT_STATUS} -ne 0 ]; then
-					SCRIPT_NAME=`basename "${script}"`
+				if ((${EXIT_STATUS} != 0)); then
+					local SCRIPT_NAME=$(basename "${script}")
 					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "`cat ./.bp_error_desc | tr '\n' '@'`"
 					dump_error_info
 					exit ${EXIT_STATUS}
@@ -180,7 +183,7 @@ start_scripts() {
 			fi
 		done
 
-	elif [ "${FLOW_TYPE}" = "DOC" ]; then
+	elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
         read_doc_flow
 	else
 		echo "Flow type not supported."
@@ -188,3 +191,4 @@ start_scripts() {
 
 	log_debug "Finished ${PROJ_NAME} project"
 }
+
