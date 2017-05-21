@@ -55,8 +55,8 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
         exit 0
     fi
 
-    SCRIPT_TO_START=$1
-    awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | grep -Eq "^${SCRIPT_TO_START}$" && {
+    SCRIPT_TO_START="${1}"
+    awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | grep --extended-regexp --quiet "^${SCRIPT_TO_START}$" && {
         START_POINT=$(awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | cut -f1 -d'.')
         for script in $(seq -f "%g.sh" ${START_POINT} 10); do
             if [[ -f "${WORKING_DIR}/${script}" ]]; then
@@ -82,10 +82,13 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
     }
 elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
     
-    SCRIPT_TO_START=$1
-    grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | grep -Eq "^${SCRIPT_TO_START}:" && {
+    SCRIPT_TO_START="${1}"
+    grep --extended-regexp --invert-match '^#' "${FLOW_FILE}" | grep --invert-match --extended-regexp '^$' | \
+        grep --extended-regexp --quiet "^${SCRIPT_TO_START}:" && {
         
-        SCRIPT_TO_EXECUTE_TMP=$(grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | grep -E "^${SCRIPT_TO_START}" | sed -n 1p | awk -F ":" '{print $1}')
+        SCRIPT_TO_EXECUTE_TMP=$(grep --extended-regexp --invert-match '^#' "${FLOW_FILE}" \
+            | grep --invert-match --extended-regexp '^$' | grep --extended-regexp "^${SCRIPT_TO_START}" \
+                | sed -n 1p | awk -F ":" '{print $1}')
         
         if [[ -z "${SCRIPT_TO_EXECUTE_TMP}" ]]; then
             echo "Script to execute not found."

@@ -17,15 +17,12 @@ readonly ERROR_SCRIPT_NOT_FOUND=7
 
 #######################################################################
 # name: log_debug
+# Prints out debug information to a log file.
 #######################################################################
 log_debug () {
-    if [[ -z "${1}" ]]; then
-        echo "ERROR, empty argument"
-        exit ${ERROR_EMPTY_DEBUG_ARGUMENT}
-    fi
-
-    if ((${DEBUG} == 1)); then
-        if ((${INCLUDE_DATE_LOG} == 1)); then
+    [[ -z "${1}" ]] && return
+    if ((DEBUG == 1)); then
+        if ((INCLUDE_DATE_LOG == 1)); then
             echo "[$(date '+%F %T')] [DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
         else
             echo "[DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
@@ -91,11 +88,11 @@ dump_processor_info() {
 # Function that executes recursively scripts defined in the FLOW_FILE file.
 #######################################################################
 execute_chain() {
-	
-	local NEXT_SCRIPT LINE EXIT_STATUS next_to_do
+
+    local NEXT_SCRIPT LINE EXIT_STATUS next_to_do
 
     for NEXT_SCRIPT in $(echo "${1}" | tr ',' '\n'); do
-        LINE=$(grep -E "^${NEXT_SCRIPT}" "${FLOW_FILE}")
+        LINE=$(grep --extended-regexp "^${NEXT_SCRIPT}" "${FLOW_FILE}")
         if [[ ! -z "${LINE}" ]]; then
             
             dump_processor_info "${LINE}"
