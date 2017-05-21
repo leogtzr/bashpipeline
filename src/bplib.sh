@@ -45,7 +45,7 @@ BP_ERROR_CONTENT
 
 #######################################################################
 # name: dump_error_info
-# Convenience function to show current status of the failed script.
+# Convenience function to show current status of a failed script.
 #######################################################################
 dump_error_info() {
     (
@@ -68,7 +68,7 @@ dump_processor_info() {
         return ${ERROR_EMPTY_ARGUMENT}
     fi
 
-    if ((${DEBUG} == 1)); then
+    if ((DEBUG == 1)); then
 
         local -r SCRIPT_NAME=$(echo "$1" | awk -F ":" '{print $1}')
         local -r SCRIPT_DESC=$(echo "$1" | awk -F ":" '{print $2}')
@@ -103,7 +103,7 @@ execute_chain() {
             EXIT_STATUS=${?}
             log_debug "${WORKING_DIR}/${HEAD_LINK_SCRIPT}.sh, exit status: ${EXIT_STATUS}"
 
-            if (( ${EXIT_STATUS} == ${SCRIPT_RET_VAL} )); then
+            if ((EXIT_STATUS == SCRIPT_RET_VAL)); then
                 local next_to_do=$(echo "${LINE}" | awk -F ":" '{print $4}')
                 execute_chain "${next_to_do}"
             else
@@ -130,8 +130,9 @@ read_doc_flow() {
         exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
     fi
  
-    local HEAD_LINK=$(grep --extended-regexp --invert-match '^#' "${FLOW_FILE}" | grep --extended-regexp --invert-match '^$' | sed -n 1p)
-    local SCRIPT_RET_VAL=$(echo "${HEAD_LINK}" | awk -F ":" '{print $3}')
+    local -r HEAD_LINK=$(grep --extended-regexp --invert-match '^#' "${FLOW_FILE}" | \
+        grep --extended-regexp --invert-match '^$' | sed -n 1p)
+    local -r SCRIPT_RET_VAL=$(echo "${HEAD_LINK}" | awk -F ":" '{print $3}')
     dump_processor_info "${HEAD_LINK}"
 
     # Execute script and if it is OK continue with the chain
@@ -142,7 +143,7 @@ read_doc_flow() {
 
     # If the exit status matches the defined
     # script return value:
-    if (( ${EXIT_STATUS} == ${SCRIPT_RET_VAL} )); then
+    if ((EXIT_STATUS == SCRIPT_RET_VAL)); then
         local NEXT_SCRIPT_STR=$(echo "${HEAD_LINK}" | awk -F ":" '{print $4}')
         if [[ ! -f "${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh" ]]; then
             echo "ERROR, ==>${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh<== not found."
@@ -167,7 +168,7 @@ start_scripts() {
                 "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
                 EXIT_STATUS=$?
                 log_debug "exit status: ${EXIT_STATUS}"
-                if ((${EXIT_STATUS} != 0)); then
+                if ((EXIT_STATUS != 0)); then
                     local SCRIPT_NAME=$(basename "${script}")
                     build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
                     dump_error_info

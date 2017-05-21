@@ -64,7 +64,7 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
                 "${WORKING_DIR}/${script}" 2> .bp_error_desc
                 EXIT_STATUS=$?
                 log_debug "status: ${EXIT_STATUS}"
-                if ((${EXIT_STATUS} != 0)); then
+                if ((EXIT_STATUS != 0)); then
                     SCRIPT_NAME=$(basename "${script}")
                     build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
                     dump_error_info
