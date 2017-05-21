@@ -10,9 +10,9 @@ readonly BP_LIB_NOT_FOUND_ERROR=76
 }
 
 # Start scripts execution
-start_scripts && {
+if start_scripts; then
     echo "$? ... finished ... "
-}
+fi
 
 exit 0
 

@@ -1,8 +1,6 @@
 #!/bin/bash
 # Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
-# set -x
-
 WORK_DIR=$(dirname "${0}" 2> /dev/null)
 BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
 BP_ERROR_FILE="${WORK_DIR}/.bp.error"
@@ -61,7 +59,7 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
     awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | grep -Eq "^${SCRIPT_TO_START}$" && {
         START_POINT=$(awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | cut -f1 -d'.')
         for script in $(seq -f "%g.sh" ${START_POINT} 10); do
-            if [ -f "${WORKING_DIR}/${script}" ]; then
+            if [[ -f "${WORKING_DIR}/${script}" ]]; then
                 log_debug "Running: $script"
                 "${WORKING_DIR}/${script}" 2> .bp_error_desc
                 EXIT_STATUS=$?
