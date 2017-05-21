@@ -1,10 +1,10 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-readonly WORK_DIR=$(dirname "${0}" 2> /dev/null)
-readonly BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
-readonly BP_ERROR_FILE="${WORK_DIR}/.bp.error"
-readonly BP_ERROR_DESCRIPTION=".bp_error_desc"
+WORK_DIR=$(dirname "${0}" 2> /dev/null)
+BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
+BP_ERROR_FILE="${WORK_DIR}/.bp.error"
+readonly BP_ERROR_DESCRIPTION="${WORK_DIR}/.bp_error_desc"
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
@@ -19,19 +19,18 @@ readonly ERROR_SCRIPT_NOT_FOUND=7
 # name: log_debug
 #######################################################################
 log_debug () {
-	if [[ -z "${1}" ]]; then
-		echo "ERROR, empty argument"
-		exit ${ERROR_EMPTY_DEBUG_ARGUMENT}
-	fi
+    if [[ -z "${1}" ]]; then
+        echo "ERROR, empty argument"
+        exit ${ERROR_EMPTY_DEBUG_ARGUMENT}
+    fi
 
-	if ((${DEBUG} == 1)); then
-		if ((${INCLUDE_DATE_LOG} == 1)); then
-			echo "[$(date '+%F %T')] [DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
-		else
-			echo "[DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
-		fi
-	fi
-
+    if ((${DEBUG} == 1)); then
+        if ((${INCLUDE_DATE_LOG} == 1)); then
+            echo "[$(date '+%F %T')] [DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
+        else
+            echo "[DEBUG] ${1}" | tee --append "${DEBUG_FILE}"
+        fi
+    fi
 }
 
 #######################################################################
@@ -40,11 +39,11 @@ log_debug () {
 # script to continue the scripts execution.
 #######################################################################
 build_bp_error_file() {
-	cat <<-BP_ERROR_CONTENT > "${BP_ERROR_FILE}"
-	FAILED_SCRIPT=${1}
-	EXIT_CODE=${2}
-	ERROR_MSG="$3"
-	BP_ERROR_CONTENT
+    cat <<-BP_ERROR_CONTENT > "${BP_ERROR_FILE}"
+    FAILED_SCRIPT=${1}
+    EXIT_CODE=${2}
+    ERROR_MSG="$3"
+BP_ERROR_CONTENT
 }
 
 #######################################################################
@@ -52,15 +51,14 @@ build_bp_error_file() {
 # Convenience function to show current status of the failed script.
 #######################################################################
 dump_error_info() {
-	(
-		. "${BP_ERROR_FILE}"
-		echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
-		echo "EXIT_CODE =======> ${EXIT_CODE}"
-		echo "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
-
-		echo "Use bp_continue.sh once the problem has been fixed."
-	)
-	rm "${BP_ERROR_DESCRIPTION}" 2> /dev/null
+    (
+        . "${BP_ERROR_FILE}"
+        echo -e "\nFAILED_SCRIPT ===> ${FAILED_SCRIPT}"
+        echo "EXIT_CODE =======> ${EXIT_CODE}"
+        echo "ERROR_MSG ======> '${ERROR_MSG}'" | tr '@' '\n'
+        echo "Use bp_continue.sh once the problem has been fixed."
+    )
+    rm "${BP_ERROR_DESCRIPTION}" 2> /dev/null
 }
 
 #######################################################################
@@ -159,37 +157,33 @@ read_doc_flow() {
 }
 
 start_scripts() {
-	
-	log_debug "Beginning ${PROJECT_NAME} project"
 
-	if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
-		
-		for script in $(seq -f "%g.sh" ${START_POINT} 10); do
-			if [[ -f "${WORKING_DIR}/${script}" ]]; then
-				log_debug "Running script '${script}'"
+    log_debug "Beginning ${PROJECT_NAME} project"
 
-	            # Execute sequential scripts within the WORKING_DIR
-	            # and send the output to the ".bp_error_desc" file.
-				"${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
-				EXIT_STATUS=$?
-				log_debug "exit status: ${EXIT_STATUS}"
+    if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
+        for script in $(seq -f "%g.sh" ${START_POINT} 10); do
+            if [[ -f "${WORKING_DIR}/${script}" ]]; then
+                log_debug "Running script '${script}'"
 
-				if ((${EXIT_STATUS} != 0)); then
-					local SCRIPT_NAME=$(basename "${script}")
-					build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
-					dump_error_info
-					exit ${EXIT_STATUS}
-				fi
-	            
-			fi
-		done
-
-	elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
+                # Execute sequential scripts within the WORKING_DIR
+                # and send the output to the ".bp_error_desc" file.
+                "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
+                EXIT_STATUS=$?
+                log_debug "exit status: ${EXIT_STATUS}"
+                if ((${EXIT_STATUS} != 0)); then
+                    local SCRIPT_NAME=$(basename "${script}")
+                    build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
+                    dump_error_info
+                    exit ${EXIT_STATUS}
+                fi
+            fi
+        done
+    elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
         read_doc_flow
-	else
-		echo "Flow type not supported."
-	fi
+    else
+        echo "Flow type not supported."
+    fi
 
-	log_debug "${PROJECT_NAME} project finished."
+    log_debug "${PROJECT_NAME} project finished."
 }
 

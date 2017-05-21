@@ -1,9 +1,9 @@
 #!/bin/bash
 # Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
-readonly WORK_DIR=$(dirname "${0}" 2> /dev/null)
-readonly BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
-readonly BP_ERROR_FILE="${WORK_DIR}/.bp.error"
+WORK_DIR=$(dirname "${0}" 2> /dev/null)
+BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
+BP_ERROR_FILE="${WORK_DIR}/.bp.error"
 readonly BP_LIB_FILE="${WORK_DIR}/bplib.sh"
 readonly ERROR_INVALID_ARGUMENT_NUMBER=69
 readonly ERROR_INIT_SCRIPT_NOT_FOUND=70
@@ -51,7 +51,7 @@ else
     exit 76
 fi
 
-if [ "${FLOW_TYPE}" = "SEQ" ]; then
+if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
 
     if [[ ! -f "${BP_ERROR_FILE}" ]]; then
         echo "Nothing to do ... "
@@ -83,7 +83,7 @@ if [ "${FLOW_TYPE}" = "SEQ" ]; then
         awk -F "=" '/^FAILED_SCRIPT/ {print $0}' .bp.error
         echo -e "\tline in the .bp.error file.\n"
     }
-elif [ "${FLOW_TYPE}" = "DOC" ]; then
+elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
     
     SCRIPT_TO_START=$1
     grep -Ev '^#' "${FLOW_FILE}" | grep -vE '^$' | grep -Eq "^${SCRIPT_TO_START}:" && {

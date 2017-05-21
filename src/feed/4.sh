@@ -3,4 +3,4 @@
 echo "I am ${0}"
 rm hmmmm
 
-exit 0
+exit 2
