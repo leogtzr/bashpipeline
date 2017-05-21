@@ -1,6 +1,8 @@
 #!/bin/bash
 # Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
+# set -x
+
 WORK_DIR=$(dirname "${0}" 2> /dev/null)
 BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
 BP_ERROR_FILE="${WORK_DIR}/.bp.error"
@@ -8,9 +10,6 @@ readonly BP_LIB_FILE="${WORK_DIR}/bplib.sh"
 readonly ERROR_INVALID_ARGUMENT_NUMBER=69
 readonly ERROR_INIT_SCRIPT_NOT_FOUND=70
 readonly ERROR_FLOW_NOT_SUPPORTED=71
-
-export ERROR_BP_FLOW_FILE_NOT_FOUND
-export ERROR_INVALID_ARGUMENT_NUMBER
 
 help_seq() {
     cat <<-HELP_SEQ
@@ -30,6 +29,14 @@ help_doc() {
 HELP_DOC
 }
 
+# Load lib:
+if [[ -f "${BP_LIB_FILE}" ]]; then
+    . "${BP_LIB_FILE}"
+else
+    echo "[$(date '+%F %T')] [ERROR] bplib.sh NOT found."
+    exit 76
+fi
+
 . "${BP_FLOW_ENV_FILENAME}" 2> /dev/null || {
     echo -e "\n[ERROR] ${BP_FLOW_ENV_FILENAME} file not found.\n"
     exit ${ERROR_BP_FLOW_FILE_NOT_FOUND}
@@ -41,14 +48,6 @@ if [[ ${#} != 1 && "${FLOW_TYPE}" = "SEQ" ]]; then
 elif [[ ${#} != 1 && "${FLOW_TYPE}" = "DOC" ]]; then
     help_doc
     exit ${ERROR_INVALID_ARGUMENT_NUMBER}
-fi
-
-# Load lib:
-if [[ -f "${BP_LIB_FILE}" ]]; then
-    . "${BP_LIB_FILE}"
-else
-    echo "[$(date '+%F %T')] [ERROR] bplib.sh NOT found."
-    exit 76
 fi
 
 if [[ "${FLOW_TYPE}" = "SEQ" ]]; then

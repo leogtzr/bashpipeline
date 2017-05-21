@@ -40,9 +40,9 @@ log_debug () {
 #######################################################################
 build_bp_error_file() {
     cat <<-BP_ERROR_CONTENT > "${BP_ERROR_FILE}"
-    FAILED_SCRIPT=${1}
-    EXIT_CODE=${2}
-    ERROR_MSG="$3"
+FAILED_SCRIPT=${1}
+EXIT_CODE=${2}
+ERROR_MSG="$3"
 BP_ERROR_CONTENT
 }
 
