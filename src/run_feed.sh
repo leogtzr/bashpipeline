@@ -1,6 +1,8 @@
 #!/bin/bash
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
+# set -x
+
 WORK_DIR=$(dirname "${0}" 2> /dev/null)
 readonly BP_LIB_NOT_FOUND_ERROR=76
 
@@ -12,6 +14,9 @@ readonly BP_LIB_NOT_FOUND_ERROR=76
 # Start scripts execution
 if start_scripts; then
     echo "$? ... finished ... "
+else
+    echo "Something went wrong ... "
+    # email notification ... 
 fi
 
 exit 0

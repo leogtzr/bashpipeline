@@ -51,7 +51,7 @@ fi
 if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
 
     if [[ ! -f "${BP_ERROR_FILE}" ]]; then
-        echo "Nothing to do ... "
+        echo "There is no lock file ... how do I know something has failed?"
         exit 0
     fi
 
