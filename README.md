@@ -136,61 +136,62 @@ exit 0
 
 The **start_scripts** function will execute your scripts from the *WORKING_DIR* directory.
 
-```
-[0 [17:14][leo@simplebashpipeline]$ ./run_feed.sh 
-[2015-06-13 17:14:43] [DEBUG] Beginning Data Feed Process project
-[2015-06-13 17:14:43] [DEBUG] Running: 1.sh  SCRIPT
-Running feed/1.sh
-[2015-06-13 17:14:43] [DEBUG] exit status: 0
-[2015-06-13 17:14:43] [DEBUG] Running: 2.sh  SCRIPT
-Running feed/2.sh
-[2015-06-13 17:14:43] [DEBUG] exit status: 0
-[2015-06-13 17:14:43] [DEBUG] Running: 3.sh  SCRIPT
-Running feed/3.sh
-[2015-06-13 17:14:43] [DEBUG] exit status: 0
-[2015-06-13 17:14:43] [DEBUG] Running: 4.sh  SCRIPT
-Running feed/4.sh
-[2015-06-13 17:14:43] [DEBUG] exit status: 0
-[2015-06-13 17:14:43] [DEBUG] Running: 5.sh  SCRIPT
-Running feed/5.sh
-[2015-06-13 17:14:43] [DEBUG] exit status: 0
-[2015-06-13 17:14:43] [DEBUG] Finished Data Feed Process project
-0 ... finished ... 
-```
-### Cómo corregir errores cuando hay un error en uno de los scripts
-```
-[0 [17:18][leo@simplebashpipeline]$ ./run_feed.sh 
-[2015-06-13 17:18:27] [DEBUG] Beginning Data Feed Process project
-[2015-06-13 17:18:27] [DEBUG] Running: 1.sh  SCRIPT
-Running feed/1.sh
-[2015-06-13 17:18:27] [DEBUG] exit status: 0
-[2015-06-13 17:18:27] [DEBUG] Running: 2.sh  SCRIPT
-Running feed/2.sh
-[2015-06-13 17:18:27] [DEBUG] exit status: 78
 
-FAILED_SCRIPT ===> 2.sh
-EXIT_CODE =======> 78
-ERROR_MSG ======> ''
+```
+[127 [22:55][leo@src]$ ./run_feed.sh 
+[2017-05-22 22:55:43] [DEBUG] Beginning 'Data Feed' project
+[2017-05-22 22:55:43] [DEBUG] Running script '1.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/1.sh
+[2017-05-22 22:55:43] [DEBUG] exit status: 0
+[2017-05-22 22:55:43] [DEBUG] Running script '3.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/3.sh
+[2017-05-22 22:55:43] [DEBUG] exit status: 0
+[2017-05-22 22:55:43] [DEBUG] Running script '4.sh'
+I am /home/leo/Escritorio/code/bashpipeline/src/feed/4.sh
+[2017-05-22 22:55:43] [DEBUG] exit status: 0
+[2017-05-22 22:55:43] [DEBUG] Running script '5.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/5.sh
+[2017-05-22 22:55:43] [DEBUG] exit status: 0
+[2017-05-22 22:55:43] [DEBUG] Running script '6.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/6.sh
+[2017-05-22 22:55:43] [DEBUG] exit status: 0
+[2017-05-22 22:55:43] [DEBUG] 'Data Feed' project finished.
+```
+### How to continue the execution with bp_continue.sh script
+```
+[0 [22:57][leo@src]$ ./run_feed.sh 
+[2017-05-22 22:57:28] [DEBUG] Beginning 'Data Feed' project
+[2017-05-22 22:57:28] [DEBUG] Running script '1.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/1.sh
+[2017-05-22 22:57:28] [DEBUG] exit status: 0
+[2017-05-22 22:57:28] [DEBUG] Running script '3.sh'
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/3.sh
+[2017-05-22 22:57:28] [DEBUG] exit status: 0
+[2017-05-22 22:57:28] [DEBUG] Running script '4.sh'
+I am /home/leo/Escritorio/code/bashpipeline/src/feed/4.sh
+[2017-05-22 22:57:28] [DEBUG] exit status: 2
+
+FAILED_SCRIPT ===> 4.sh
+EXIT_CODE =======> 2
+ERROR_MSG ======> 'rm: cannot remove 'hmmmm': No such file or directory
+'
 Use bp_continue.sh once the problem has been fixed.
+
 ```
-en el ejemplo anterior, el script *2.sh* no ha finalizado correctamente.
-Una vez que hayamos arreglado el error, podemos continuar la ejecución de los scripts
-usando el comando *bp_continue.sh*:
+in this example, **4.sh** script hasn't finished correctly (exit code != 0)
+Once we have finished the issue we can continue the script execution with the *bp_continue.sh* command:
 ```
-[0 [17:21][leo@simplebashpipeline]$ ./bp_continue.sh 2.sh
-[2015-06-13 17:21:10] [DEBUG] Running: 2.sh
-Running feed/2.sh
-[2015-06-13 17:21:10] [DEBUG] status: 0
-[2015-06-13 17:21:10] [DEBUG] Running: 3.sh
-Running feed/3.sh
-[2015-06-13 17:21:10] [DEBUG] status: 0
-[2015-06-13 17:21:10] [DEBUG] Running: 4.sh
-Running feed/4.sh
-[2015-06-13 17:21:10] [DEBUG] status: 0
-[2015-06-13 17:21:10] [DEBUG] Running: 5.sh
-Running feed/5.sh
-[2015-06-13 17:21:10] [DEBUG] status: 0
-[2015-06-13 17:21:10] [DEBUG] Finished ... 
+[130 [22:59][leo@src]$ ./bp_continue.sh 4.sh
+[2017-05-22 22:59:40] [DEBUG] Running: 4.sh
+I am /home/leo/Escritorio/code/bashpipeline/src/feed/4.sh
+[2017-05-22 22:59:40] [DEBUG] status: 0
+[2017-05-22 22:59:40] [DEBUG] Running: 5.sh
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/5.sh
+[2017-05-22 22:59:40] [DEBUG] status: 0
+[2017-05-22 22:59:40] [DEBUG] Running: 6.sh
+Running /home/leo/Escritorio/code/bashpipeline/src/feed/6.sh
+[2017-05-22 22:59:40] [DEBUG] status: 0
+[2017-05-22 22:59:40] [DEBUG] Finished ... 
 ```
 
 ## DOC FLOW

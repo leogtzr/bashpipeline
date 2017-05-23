@@ -1,3 +1,0 @@
-FAILED_SCRIPT=4.sh
-EXIT_CODE=2
-ERROR_MSG="rm: cannot remove 'hmmmm': No such file or directory@"
