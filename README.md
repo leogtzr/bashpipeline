@@ -214,10 +214,17 @@ The scripts within the **WORKING_DIR** are executed in chain. You can imagine th
                        > [c2 (5)] ~ ~ ~ > [d2 (6)]
 ```
 
-El script (a) es ejecutado primero, si su ejecución es exitosa, se ejecuta (b), si la ejecución
-de (b) es exitosa, entonces se ejecuta (c1), luego (d0) y (d1), después de (d1) se ejecuta finalmente a 
-(e). Luego la ejecución continua con (c2), luego (d2) y finalmente (e).
-Como se puede ver, la ejecución de scripts se puede dividir y mezclar entre ellos.
+Execution flow in order is:
+
+```
+1) a
+2) b
+3) c1
+4) d0
+5) c2
+6) d2
+6) e
+```
 
 El archivo donde dicha ejecución es definida tiene el formato siguiente:
 
