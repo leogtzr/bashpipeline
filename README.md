@@ -108,13 +108,13 @@ export INCLUDE_DATE_LOG=1
 
 **WORKING_DIR** path where we have our scripts to execute.
 
-*DEBUG* para configurar debug en la ejecución de los scripts. (0=DISABLED, 1=ENABLED).
+**DEBUG** enable debug. (0=DISABLED, 1=ENABLED).
 
-*DEBUG_FILE* almacena el nombre del archivo donde se almacenarán las líneas de debug.
+**DEBUG_FILE** path of our debug file.
 
-*INCLUDE_DATE_LOG* para configurar si las líneas de debug incluirán fecha o no. (0=DISABLED, 1=ENABLED).
+**INCLUDE_DATE_LOG** to see a datetime in out debug files (0=DISABLED, 1=ENABLED).
 
-Para incluir la librería en nuestro script principal hacemos esto:
+To include **bashpipeline** in our main script we need to do this:
 run_feed.sh
 ```
 #!/bin/bash
