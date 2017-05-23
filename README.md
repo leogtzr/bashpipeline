@@ -115,14 +115,15 @@ export INCLUDE_DATE_LOG=1
 **INCLUDE_DATE_LOG** to see a datetime in out debug files (0=DISABLED, 1=ENABLED).
 
 To include **bashpipeline** in our main script we need to do this:
+
 run_feed.sh
 ```
 #!/bin/bash
 
-if [ -f ./bplib.sh ]; then
-    . ./bplib.sh
+if [[ -f "./bplib.sh" ]]; then
+    . "./bplib.sh"
 else
-    echo "[`date '+%F %T'`] [ERROR] bplib.sh NOT found."
+    echo "[$(date '+%F %T')] [ERROR] bplib.sh NOT found."
     exit 76
 fi
 
@@ -132,8 +133,8 @@ start_scripts && {
 exit 0
 
 ```
-La función start_scripts se encarga de empezar la ejecución de nuestro scripts en el directorio
-*WORKING_DIR*.
+
+The **start_scripts** function will execute your scripts from the *WORKING_DIR* directory.
 
 ```
 [0 [17:14][leo@simplebashpipeline]$ ./run_feed.sh 
