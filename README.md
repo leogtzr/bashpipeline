@@ -106,7 +106,7 @@ export INCLUDE_DATE_LOG=1
 
 *FLOW_TYPE* Flow execution type, we can use _SEQ_ or _DOC_.
 
-*WORKING_DIR* almacena el directorio donde se encuentran los scripts a ejecutar.
+*WORKING_DIR* path where we have our scripts to execute.
 
 *DEBUG* para configurar debug en la ejecución de los scripts. (0=DISABLED, 1=ENABLED).
 
