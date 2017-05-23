@@ -1,14 +1,18 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
+# set -x
+
 WORK_DIR=$(dirname "${0}" 2> /dev/null)
 BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
 BP_ERROR_FILE="${WORK_DIR}/.bp.error"
-readonly BP_ERROR_DESCRIPTION="${WORK_DIR}/.bp_error_desc"
+BP_ERROR_DESCRIPTION="${WORK_DIR}/.bp_error_desc"
+
 readonly ERROR_BP_FLOW_FILE_NOT_FOUND=68
 readonly ERROR_EMPTY_DEBUG_ARGUMENT=69
 readonly ERROR_EMPTY_ARGUMENT=70
-readonly ERROR_SCRIPT_NOT_FOUND=7
+readonly ERROR_SCRIPT_NOT_FOUND=71
+readonly ERROR_SCRIPT_WITH_DIFFERENT_STATUS=78
 
 . "${BP_FLOW_ENV_FILENAME}" 2> /dev/null || {
     echo "[ERROR] ${BP_FLOW_ENV_FILENAME} file not found."
@@ -106,12 +110,12 @@ execute_chain() {
             if ((EXIT_STATUS == SCRIPT_RET_VAL)); then
                 local next_to_do=$(echo "${LINE}" | awk -F ":" '{print $4}')
                 execute_chain "${next_to_do}"
-            else
-                echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
+                else
+                    echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
 
-                dump_processor_info "${LINE}"
-                build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
-                exit 78
+                    dump_processor_info "${LINE}"
+                    build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(tr '\n' '@' < "${BP_ERROR_DESCRIPTION}")"
+                    exit "${ERROR_SCRIPT_WITH_DIFFERENT_STATUS}"
             fi
         fi
     done
@@ -147,7 +151,7 @@ read_doc_flow() {
         local NEXT_SCRIPT_STR=$(echo "${HEAD_LINK}" | awk -F ":" '{print $4}')
         if [[ ! -f "${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh" ]]; then
             echo "ERROR, ==>${WORKING_DIR}/${NEXT_SCRIPT_STR}.sh<== not found."
-            exit ${ERROR_SCRIPT_NOT_FOUND}
+            exit "${ERROR_SCRIPT_NOT_FOUND}"
         fi
         execute_chain "${NEXT_SCRIPT_STR}"
     fi
@@ -166,13 +170,13 @@ start_scripts() {
                 # Execute sequential scripts within the WORKING_DIR
                 # and send the output to the ".bp_error_desc" file.
                 "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
-                EXIT_STATUS=$?
+                EXIT_STATUS=${?}
                 log_debug "exit status: ${EXIT_STATUS}"
                 if ((EXIT_STATUS != 0)); then
                     local SCRIPT_NAME=$(basename "${script}")
-                    build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat "${BP_ERROR_DESCRIPTION}" | tr '\n' '@')"
+                    build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(tr '\n' '@' < "${BP_ERROR_DESCRIPTION}")"
                     dump_error_info
-                    exit ${EXIT_STATUS}
+                    exit "${EXIT_STATUS}"
                 fi
             fi
         done

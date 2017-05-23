@@ -8,6 +8,9 @@ readonly BP_LIB_FILE="${WORK_DIR}/bplib.sh"
 readonly ERROR_INVALID_ARGUMENT_NUMBER=69
 readonly ERROR_INIT_SCRIPT_NOT_FOUND=70
 readonly ERROR_FLOW_NOT_SUPPORTED=71
+readonly ERROR_IMPORTING_BPLIB=72
+readonly ERROR_BPLIB_NOT_FOUND=73
+readonly ERROR_SCRIPT_TO_EXECUTE_NOT_FOUND=74
 
 help_seq() {
     cat <<-HELP_SEQ
@@ -29,10 +32,10 @@ HELP_DOC
 
 # Load lib:
 if [[ -f "${BP_LIB_FILE}" ]]; then
-    . "${BP_LIB_FILE}"
+    . "${BP_LIB_FILE}" || exit "${ERROR_IMPORTING_BPLIB}"
 else
     echo "[$(date '+%F %T')] [ERROR] bplib.sh NOT found."
-    exit 76
+    exit "${ERROR_BPLIB_NOT_FOUND}"
 fi
 
 . "${BP_FLOW_ENV_FILENAME}" 2> /dev/null || {
@@ -61,12 +64,12 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
         for script in $(seq -f "%g.sh" ${START_POINT} 10); do
             if [[ -f "${WORKING_DIR}/${script}" ]]; then
                 log_debug "Running: $script"
-                "${WORKING_DIR}/${script}" 2> .bp_error_desc
-                EXIT_STATUS=$?
+                "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
+                EXIT_STATUS=${?}
                 log_debug "status: ${EXIT_STATUS}"
                 if ((EXIT_STATUS != 0)); then
                     SCRIPT_NAME=$(basename "${script}")
-                    build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(cat ./.bp_error_desc | tr '\n' '@')"
+                    build_bp_error_file "${SCRIPT_NAME}" "${EXIT_STATUS}" "$(tr '\n' '@' < "${BP_ERROR_DESCRIPTION}")"
                     dump_error_info
                     exit ${EXIT_STATUS}
                 fi
@@ -91,8 +94,8 @@ elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
                 | sed -n 1p | awk -F ":" '{print $1}')
         
         if [[ -z "${SCRIPT_TO_EXECUTE_TMP}" ]]; then
-            echo "Script to execute not found."
-            exit 98
+            echo "ERROR, Script to execute not found."
+            exit "${ERROR_SCRIPT_TO_EXECUTE_NOT_FOUND}"
         fi
 
         execute_chain "${SCRIPT_TO_EXECUTE_TMP}"
