@@ -2,11 +2,11 @@ bash pipeline v1.0
 ------------------
 Leo Gutiérrez R. | leogutierrezramirez@gmail.com
 
-Esta librería ayudar a modularizar la ejecución de un script.
+This small library helps to modularize the execution of a script.
 
 ## SEQUENTIAL FLOW
 
-Ejemplo:
+Example:
 
 ```
 #!/bin/bash
@@ -23,12 +23,10 @@ Ejemplo:
 exit 0
 ```
 
-El problema con este script es que si en algún punto este script falla, para recuperar la ejecución, se tiene que ejecutar
-el script completamente, es decir, desde el principio, no hay un punto en el cuál podamos continuar la ejecución luego de 
-que el problema en el script ha sido resuelto.
+The problem with this script is that we don't have a "save point", a save point that we can use to continue with the script execution.
+We need to fix the issue and start from scratch ... (or modify the current script and comment out some lines ... )
+With this small library we can modularize our complex script with little sequential scripts in a work directory and let the library to handle the execution.
 
-Con bash pipeline podemos modularizar el script en archivos secuenciales en un directorio y dejar que la
-librería se encargue de ejecutarlos secuencialmente
 
 **1.sh:**
 ```
@@ -65,16 +63,14 @@ librería se encargue de ejecutarlos secuencialmente
 ...
 ```
 
-Si la ejecución de alguno de estos scripts falla, podemos continuar la ejecución utilizar el comando *bp_continue.sh* de la siguiente
-manera:
+If any of these script fails, we can continue the execution with the *bp_continue.sh* command:
 ```
-	$ bp_continue.sh 2.sh
+	$ ./bp_continue.sh 2.sh
 ```	
 
-El script se encargará de continuar la ejecución de los siguientes scripts (3.sh, 4.sh, 5.sh ... ) secuencialmente 
-dentro del directorio del proyecto.
+The script will execute the other scripts sequentially.
 
-EJEMPLO DE USO:
+Example:
 1. Crear nuestros scripts secuenciales en un directorio:
 ```
 [0 [17:06][leo@feed]$ ls
