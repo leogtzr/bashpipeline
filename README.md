@@ -200,19 +200,19 @@ Los scripts dentro de este archivo son ejecutados en cadena. Podemos imaginar un
 como la siguiente:
 
 ```
-                                > (d0) 
-                              ~
-                            ~
-                          ~
-                     > (c1) ~ ~ ~ > (d1) 
-                   ~                  ~
-                 ~                      ~
-               ~                          ~
-(a) ~ ~ ~ ~ > (b)                           > (e) 
-               ~                          ~
-                 ~                      ~
-                   ~                  ~
-                     > (c2) ~ ~ ~ > (d2)
+                                 > [d0 (4)]
+                               ~
+                             ~
+                           ~
+                       > [c1 (3)] ~ ~ ~ ~
+                     ~                   ~
+                   ~                       ~
+                 ~                           ~
+[a (1)] ~ ~ ~ ~ > [b (2)]                      > [e (7)]
+                 ~                           ~
+                   ~                       ~
+                     ~                   ~
+                       > [c2 (5)] ~ ~ ~ > [d2 (6)]
 ```
 
 El script (a) es ejecutado primero, si su ejecución es exitosa, se ejecuta (b), si la ejecución
