@@ -227,6 +227,7 @@ Execution flow in order is:
 ```
 
 El archivo donde dicha ejecución es definida tiene el formato siguiente:
+*FLOW_FILE* has the following syntax:
 
 ```
 # syntax:
