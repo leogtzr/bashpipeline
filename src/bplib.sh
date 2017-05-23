@@ -158,7 +158,7 @@ read_doc_flow() {
 
 start_scripts() {
 
-    log_debug "Beginning ${PROJECT_NAME} project"
+    log_debug "Beginning '${PROJECT_NAME}' project"
 
     if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
         for script in $(seq -f "%g.sh" ${START_POINT} 10); do
@@ -184,6 +184,6 @@ start_scripts() {
         echo "Flow type not supported."
     fi
 
-    log_debug "'${PROJECT_NAME}'' project finished."
+    log_debug "'${PROJECT_NAME}' project finished."
 }
 
