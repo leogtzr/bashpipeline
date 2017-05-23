@@ -102,11 +102,11 @@ export DEBUG_FILE=log_$(date '+%Y%m%S_%H%M%S').log
 export INCLUDE_DATE_LOG=1
 ```
 
-*PROJECT_NAME* The name of our project.
+**PROJECT_NAME** The name of our project.
 
-*FLOW_TYPE* Flow execution type, we can use _SEQ_ or _DOC_.
+**FLOW_TYPE** Flow execution type, we can use _SEQ_ or _DOC_.
 
-*WORKING_DIR* path where we have our scripts to execute.
+**WORKING_DIR** path where we have our scripts to execute.
 
 *DEBUG* para configurar debug en la ejecución de los scripts. (0=DISABLED, 1=ENABLED).
 
