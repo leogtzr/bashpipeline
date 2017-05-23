@@ -71,7 +71,7 @@ If any of these script fails, we can continue the execution with the *bp_continu
 The script will execute the other scripts sequentially.
 
 Example:
-1. Crear nuestros scripts secuenciales en un directorio:
+1. Create our scripts in a specific directory:
 ```
 [0 [17:06][leo@feed]$ ls
 1.sh  2.sh  3.sh  4.sh  5.sh
@@ -92,18 +92,19 @@ exit 0
 echo "Running $0"
 exit 0
 ```
-2. Modificar el archivo *bp_flow.env*:
+2. Modify the *bp_flow.env* configuration file:
 ```
 export PROJECT_NAME="Data Feed Process"
 export FLOW_TYPE=SEQ
 export WORKING_DIR=feed
 export DEBUG=1
-export DEBUG_FILE=log_`date '+%Y%m%S_%H%M%S'`.log
+export DEBUG_FILE=log_$(date '+%Y%m%S_%H%M%S').log
 export INCLUDE_DATE_LOG=1
 ```
-*PROJECT_NAME* almacena el nombre del proyecto actual.
 
-*FLOW_TYPE* almacena el tipo de flujo de ejecución, pueden ser _SEQ_ o _DOC_.
+*PROJECT_NAME* The name of our project.
+
+*FLOW_TYPE* Flow execution type, we can use _SEQ_ or _DOC_.
 
 *WORKING_DIR* almacena el directorio donde se encuentran los scripts a ejecutar.
 
