@@ -76,7 +76,7 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
             fi
         done
         
-        rm --f "${BP_ERROR_FILE}" 2> /dev/null
+        rm --force "${BP_ERROR_FILE}" 2> /dev/null
         log_debug "Finished ... "
         exit 0
     } || {
