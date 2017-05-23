@@ -195,9 +195,7 @@ Running /home/leo/Escritorio/code/bashpipeline/src/feed/6.sh
 ```
 
 ## DOC FLOW
-
-Doc flow es otro tipo de ejecución modular de scripts en nuestro proyecto.
-El flujo de ejecución es definido en un archivo externo (FLOW_FILE). 
+*Doc flow* is another modular execution type for our project. The execution flow is defined using an external file *FLOW_FILE*.
 Los scripts dentro de este archivo son ejecutados en cadena. Podemos imaginar una estructura de árbol
 como la siguiente:
 
