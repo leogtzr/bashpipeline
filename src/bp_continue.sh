@@ -63,7 +63,7 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
         START_POINT=$(awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | cut -f1 -d'.')
         for script in $(seq -f "%g.sh" ${START_POINT} 10); do
             if [[ -f "${WORKING_DIR}/${script}" ]]; then
-                log_debug "Running: $script"
+                log_debug "Running: ${script}"
                 "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"
                 EXIT_STATUS=${?}
                 log_debug "status: ${EXIT_STATUS}"
@@ -99,7 +99,7 @@ elif [[ "${FLOW_TYPE}" = "DOC" ]]; then
         fi
 
         execute_chain "${SCRIPT_TO_EXECUTE_TMP}"
-        log_debug "Done ... "
+        log_debug "Project '${PROJECT_NAME}' finished."
         exit 0
 
     } || {

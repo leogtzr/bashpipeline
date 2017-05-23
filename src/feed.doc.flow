@@ -3,8 +3,8 @@
 # Example:
 
 a:a script:0:b
-b:b script:0:c1,c2
-c1:c1 script:2:d0,d1
+b:b script:0:c1
+c1:c1 script:2:d0
 c2:c2 script:0:d2
 d0:d0 script:0:
 d1:d1 script:0:e

@@ -1,8 +1,6 @@
 # bash pipeline general functions. 
 # Leo Gutiérrez R. leogutierrezramirez@gmail.com
 
-# set -x
-
 WORK_DIR=$(dirname "${0}" 2> /dev/null)
 BP_FLOW_ENV_FILENAME="${WORK_DIR}/bp_flow.env"
 BP_ERROR_FILE="${WORK_DIR}/.bp.error"
@@ -81,7 +79,7 @@ dump_processor_info() {
 
         echo -e "{\n\tScript: ${SCRIPT_NAME}"
         echo -e "\tDescription: ${SCRIPT_DESC}"
-        echo -e "\tExpected status: ${SCRIPT_RET_VAL}"
+        echo -e "\tExpected exit status: ${SCRIPT_RET_VAL}"
         echo -e "\tNext scripts: ${NEXT_SCRIPTS}\n}"
     fi
 
@@ -111,7 +109,7 @@ execute_chain() {
                 local next_to_do=$(echo "${LINE}" | awk -F ":" '{print $4}')
                 execute_chain "${next_to_do}"
                 else
-                    echo "[FATAL] Different exit status ... ${EXIT_STATUS}"
+                    echo "[FATAL], this script (${HEAD_LINK_SCRIPT}.sh) finished with a different exit status ==> ${EXIT_STATUS}"
 
                     dump_processor_info "${LINE}"
                     build_bp_error_file "${HEAD_LINK_SCRIPT}" "${EXIT_STATUS}" "$(tr '\n' '@' < "${BP_ERROR_DESCRIPTION}")"
@@ -186,6 +184,6 @@ start_scripts() {
         echo "Flow type not supported."
     fi
 
-    log_debug "${PROJECT_NAME} project finished."
+    log_debug "'${PROJECT_NAME}'' project finished."
 }
 
