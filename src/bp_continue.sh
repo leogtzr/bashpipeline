@@ -61,7 +61,7 @@ if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
     SCRIPT_TO_START="${1}"
     awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | grep --extended-regexp --quiet "^${SCRIPT_TO_START}$" && {
         START_POINT=$(awk -F '=' '/^FAILED_SCRIPT/ {print $2}' "${BP_ERROR_FILE}" | cut -f1 -d'.')
-        for script in $(seq -f "%g.sh" ${START_POINT} 10); do
+        for script in $(seq --format "%g.sh" ${START_POINT} 10); do
             if [[ -f "${WORKING_DIR}/${script}" ]]; then
                 log_debug "Running: ${script}"
                 "${WORKING_DIR}/${script}" 2> "${BP_ERROR_DESCRIPTION}"

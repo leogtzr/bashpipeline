@@ -161,7 +161,7 @@ start_scripts() {
     log_debug "Beginning '${PROJECT_NAME}' project"
 
     if [[ "${FLOW_TYPE}" = "SEQ" ]]; then
-        for script in $(seq -f "%g.sh" ${START_POINT} 10); do
+        for script in $(seq --format "%g.sh" ${START_POINT} 10); do
             if [[ -f "${WORKING_DIR}/${script}" ]]; then
                 log_debug "Running script '${script}'"
 
