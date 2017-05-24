@@ -235,13 +235,13 @@ The file where the flow execution is defined *FLOW_FILE* has the following synta
 ```
 
 The first field (delimited by ':') is the name of the script (_bashpipeline_ will ignore the .sh file extension) to execute.
+The second field is a description for this script (optional).
+The third field is the expected exit code once the script completes its execution (_bashpipeline_ will stop the execution if the script exit code does not match what is defined here).
+The last field is the next script to execute.
 
-El primer campo es el nombre del script a ejecutar.
-El segundo campo es una descripción sobre el script a ejecutar (opcional).
-El tercer campo es el valor de retorno que se espera del script a ejecutar. 
-El cuarto campo son los siguientes scripts a ejecutar.
+Example:
 
-Ejemplo:
+feed.doc.flow
 ```
 a:a script:0:b
 b:b script:0:c1,c2
@@ -253,12 +253,10 @@ d2:d2 script:0:e
 e:e script:0:
 ```
 
-Para habilitar este tipo de ejecución, solo debemos de especificar el tipo de ejecución **DOC** en el archivo 
-bp_flow.env:
+To use this flow execution, we need to specify the following variables in the *bp_flow.env* file:
 
 ```
 export FLOW_TYPE=DOC
-export FLOW_FILE=project2.flow
+export FLOW_FILE=feed.doc.flow
 ```
 
-https://github.com/leogtzr/bashpipeline.wiki.git
